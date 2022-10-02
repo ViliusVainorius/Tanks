@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +22,8 @@ namespace Tanks
     /// </summary>
     public partial class MainWindow : Window
     {
+        Socket socket;
+        Socket keepAliveSocket;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -51,15 +55,20 @@ namespace Tanks
 
         private void GameLoop(object sender, EventArgs e)
         {
+            byte[] data;
             PlayerHitBox = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
 
             if (moveLeft == true && Canvas.GetLeft(Player) > 0)
             {
                 Canvas.SetLeft(Player, Canvas.GetLeft(Player) - playerSpeed);
+                data = Encoding.ASCII.GetBytes("Moved left");
+                socket.Send(data);
             }
             if (moveRight == true && Canvas.GetLeft(Player) + 90 < Application.Current.MainWindow.Width)
             {
                 Canvas.SetLeft(Player, Canvas.GetLeft(Player) + playerSpeed);
+                data = Encoding.ASCII.GetBytes("Moved right");
+                socket.Send(data);
             }
             if (moveUp == true && Canvas.GetTop(Player) > 0)
             {
@@ -104,6 +113,13 @@ namespace Tanks
                 }
             }
 
+            data = new byte[0];
+            try
+            {
+                socket.Receive(data);
+                socket.Send(data, SocketFlags.None);
+            }
+            catch { }
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -164,6 +180,14 @@ namespace Tanks
 
         private void StartGame()
         {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Blocking = false;
+            socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
+
+            byte[] data = new byte[0];
+            socket.Send(data);
 
             gameTimer.Start();
 
@@ -185,7 +209,6 @@ namespace Tanks
             Player2.Fill = player2Image;
 
             MyCanvas.Background = Brushes.DarkGray;
-
         }
 
         private void ChangeTankSkins(Rectangle tank)
