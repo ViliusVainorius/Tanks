@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameObject.cs" />
     <Compile Include="GameSession.cs" />
     <Compile Include="PlayerAction.cs" />
     <Compile Include="Packet.cs" />
