@@ -225,10 +225,5 @@ namespace Tanks
 
             MyCanvas.Background = Brushes.DarkGray;
         }
-
-        private void ChangeTankSkins(Rectangle tank)
-        {
-
-        }
     }
 }
