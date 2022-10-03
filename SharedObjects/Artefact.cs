@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public interface GameObject
+    internal interface Artefact: GameObject
     {
-        int X { get; set; }
-        int Y { get; set; }
-        void draw();
-        void getDimensions();
+
     }
 }

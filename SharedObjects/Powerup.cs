@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class Wall: Obstacle
+    public class Powerup : Artefact
     {
-        public int height { get; set; }
-        public int width { get; set; }
+        public enum PowerupType
+        {
+            Live, 
+            TripleShoot
+        }
         public int X { get; set; }
         public int Y { get; set; }
+        public PowerupType type { get; set; }
 
         public void draw()
         {

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class Wall: Obstacle
+    public class Bullet : GameObject
     {
-        public int height { get; set; }
-        public int width { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public double speed { get; set; }
 
         public void draw()
         {
