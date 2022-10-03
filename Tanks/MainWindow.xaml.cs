@@ -15,6 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using SharedObjects;
+using Newtonsoft.Json;
+
 namespace Tanks
 {
     /// <summary>
@@ -23,7 +26,6 @@ namespace Tanks
     public partial class MainWindow : Window
     {
         Socket socket;
-        Socket keepAliveSocket;
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
@@ -57,27 +59,29 @@ namespace Tanks
         private void GameLoop(object sender, EventArgs e)
         {
             byte[] data;
+            PlayerAction action = null;
+
             PlayerHitBox = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
 
             if (moveLeft == true && Canvas.GetLeft(Player) > 0)
             {
                 Canvas.SetLeft(Player, Canvas.GetLeft(Player) - playerSpeed);
-                data = Encoding.ASCII.GetBytes("Moved left");
-                socket.Send(data);
+                action = new PlayerAction(ActionType.move, (int)MoveSide.Left);
             }
             if (moveRight == true && Canvas.GetLeft(Player) + 90 < Application.Current.MainWindow.Width)
             {
                 Canvas.SetLeft(Player, Canvas.GetLeft(Player) + playerSpeed);
-                data = Encoding.ASCII.GetBytes("Moved right");
-                socket.Send(data);
+                action = new PlayerAction(ActionType.move, (int)MoveSide.Right);
             }
             if (moveUp == true && Canvas.GetTop(Player) > 0)
             {
                 Canvas.SetTop(Player, Canvas.GetTop(Player) - playerSpeed);
+                action = new PlayerAction(ActionType.move, (int)MoveSide.Up);
             }
             if (moveDown == true && Canvas.GetTop(Player) + 90 < Application.Current.MainWindow.Height)
             {
                 Canvas.SetTop(Player, Canvas.GetTop(Player) + playerSpeed);
+                action = new PlayerAction(ActionType.move, (int)MoveSide.Down);
             }
 
             foreach (var x in MyCanvas.Children.OfType<Rectangle>())
@@ -112,6 +116,13 @@ namespace Tanks
                     }
 
                 }
+            }
+
+            if(action != null)
+            {
+                string json = JsonConvert.SerializeObject(action);
+                data = Encoding.ASCII.GetBytes(json);
+                socket.Send(data);
             }
 
             if((DateTime.Now - previous).Seconds > 30)

@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Xml;
 using SharedObjects;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -48,43 +49,62 @@ namespace Server
 
             while (true)
             {
-                TimeSpan span = DateTime.Now - previous;
+                KeepAlive();
 
-                if(span.Minutes >= 1)
-                {
-                    KeepAlive();
-                    previous = DateTime.Now;
-                }
+                Packet packet = ReceiveData();
+                Player player = GetPlayer(packet);
 
-                byte[] data = new byte[1024];
-                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-                EndPoint Remote = (EndPoint)(sender);
-                try
+                if(packet != null)
                 {
-                    int recv = socket.ReceiveFrom(data, ref Remote);
-                }
-                catch
-                {
-                    continue;
-                }
-
-                if((Remote != (EndPoint)sender))
-                {
-                    Player player = FindPlayer(Remote);
-                    if(player == null)
+                    string data = Encoding.ASCII.GetString(packet.Data);
+                    try
                     {
-                        player = new Player(Remote);
-                        players.Add(player);
-                        Console.WriteLine("Player at endpoint {0} added!", player.EndPoint);
+                        PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
+                        Console.WriteLine("Player Action = {0}, Player Side = {1}", action.type, action.varied);
                     }
-
-                    player.LastKeepAlive = DateTime.Now;
+                    catch { }
                 }
-
-                string msg = Encoding.ASCII.GetString(data);
-                if(msg != "")
-                    Console.WriteLine(msg);
             }
+        }
+
+        private Player GetPlayer(Packet packet)
+        {
+            if (packet == null)
+            {
+                return null;
+            }
+
+            Player player = FindPlayer(packet.Endpoint);
+            if (player == null)
+            {
+                player = new Player(packet.Endpoint);
+                players.Add(player);
+                Console.WriteLine("Player at endpoint {0} added!", player.EndPoint);
+            }
+
+            player.LastKeepAlive = DateTime.Now;
+
+            return player;
+        }
+
+        private Packet ReceiveData()
+        {
+            byte[] data = new byte[1024];
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            EndPoint Remote = (EndPoint)(sender);
+            try
+            {
+                int recv = socket.ReceiveFrom(data, ref Remote);
+            }
+            catch
+            {
+                return null;
+            }
+
+            if (Remote == (EndPoint)sender)
+                return null;
+
+            return new Packet(Remote, data);
         }
 
         private Player FindPlayer(EndPoint endPoint)
@@ -100,6 +120,13 @@ namespace Server
 
         private void KeepAlive()
         {
+            TimeSpan span = DateTime.Now - previous;
+
+            if(span.Minutes < 1)
+            {
+                return;
+            }
+
             List<int> playerId = new List<int>();
 
             for(int i = 0; i < players.Count; i++)
@@ -113,6 +140,8 @@ namespace Server
                 Console.WriteLine("Player at endpoint {0} removed!", players[playerId[i]].EndPoint.ToString());
                 players.RemoveAt(playerId[i]);
             }
+
+            previous = DateTime.Now;
         }
     }
 }
