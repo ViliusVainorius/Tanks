@@ -199,6 +199,11 @@ namespace Tanks
             socket.Blocking = false;
             socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
 
+            while (gameOver)
+            {
+
+            }
+
             byte[] data = new byte[0];
             socket.Send(data);
 

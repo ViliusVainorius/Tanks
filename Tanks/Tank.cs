@@ -13,15 +13,15 @@ namespace Tanks
     {
         public int Width { get; set; }
         public int Height { get; set; }
-        public int Top { get; set; }
-        public int Left { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public Tank(int width, int height, int top, int left)
         {
             this.Width = width;
             this.Height = height;
-            this.Top = top;
-            this.Left = left;
+            this.X = top;
+            this.Y = left;
 
             Rectangle rec = new Rectangle()
             {
@@ -34,8 +34,8 @@ namespace Tanks
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.MyCanvas.Children.Add(rec);
-            Canvas.SetTop(rec, Top);
-            Canvas.SetLeft(rec, Left);
+            Canvas.SetTop(rec, X);
+            Canvas.SetLeft(rec, Y);
         }
     }
 }
