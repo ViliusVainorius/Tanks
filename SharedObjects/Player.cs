@@ -12,22 +12,22 @@ namespace SharedObjects
     {
         public EndPoint EndPoint;
         public DateTime LastKeepAlive;
-        private int KeepAliveTimeoutSeconds;
+        private int KeepAliveMinutes;
 
-        public Player(EndPoint EndPoint) : this(EndPoint, 10)
+        public Player(EndPoint EndPoint) : this(EndPoint, 1)
         {
         }
 
-        public Player(EndPoint endPoint, int KeepAliveTimeoutSeconds)
+        public Player(EndPoint endPoint, int KeepAliveMinutes)
         {
             this.EndPoint = endPoint;
             this.LastKeepAlive = DateTime.Now;
-            this.KeepAliveTimeoutSeconds = KeepAliveTimeoutSeconds;
+            this.KeepAliveMinutes = KeepAliveMinutes;
         }
 
         public bool IsAlive()
         {
-            return (DateTime.Now - LastKeepAlive).Seconds > KeepAliveTimeoutSeconds;
+            return !((DateTime.Now - LastKeepAlive).Minutes >= KeepAliveMinutes);
         }
     }
 }

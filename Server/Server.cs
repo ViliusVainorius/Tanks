@@ -8,30 +8,53 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Xml;
 using SharedObjects;
+using System.ComponentModel;
 
 namespace Server
 {
     internal class Server
     {
-        Socket socket;
-        List<Player> players = new List<Player>();
-
-        public Server() : this(8888)
+        private Socket socket;
+        private List<Player> players = new List<Player>();
+        private DateTime previous;
+        private static Server instance;
+        public static int port = 8888;
+        
+        public static Server Instance
         {
-
+            get
+            {
+                if(instance == null)
+                {
+                    instance = new Server(port);
+                }
+                return instance;
+            }
         }
-        public Server(int port)
+
+        private Server(int port)
         {
+            Console.WriteLine("Starting server on port {0}!", port);
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Blocking = false;
             socket.Bind(new IPEndPoint(IPAddress.Loopback, port));
+
+            previous = DateTime.Now;
         }
 
         public void Start()
         {
+            Console.WriteLine("Server has been started!");
+
             while (true)
             {
-                KeepAlive();
+                TimeSpan span = DateTime.Now - previous;
+
+                if(span.Minutes >= 1)
+                {
+                    KeepAlive();
+                    previous = DateTime.Now;
+                }
 
                 byte[] data = new byte[1024];
                 IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
@@ -45,27 +68,34 @@ namespace Server
                     continue;
                 }
 
-                Player player = new Player(Remote);
-                if (player != null && !PlayerExists(player))
+                if((Remote != (EndPoint)sender))
                 {
-                    players.Add(player);
-                    Console.WriteLine("Player at endpoint {0} added!", player.EndPoint);
+                    Player player = FindPlayer(Remote);
+                    if(player == null)
+                    {
+                        player = new Player(Remote);
+                        players.Add(player);
+                        Console.WriteLine("Player at endpoint {0} added!", player.EndPoint);
+                    }
+
+                    player.LastKeepAlive = DateTime.Now;
                 }
 
                 string msg = Encoding.ASCII.GetString(data);
-                Console.WriteLine(msg);
+                if(msg != "")
+                    Console.WriteLine(msg);
             }
         }
 
-        private bool PlayerExists(Player obj)
+        private Player FindPlayer(EndPoint endPoint)
         {
             foreach(Player player in players)
             {
-                if (player.ToString() == obj.ToString())
-                    return true;
+                if (player.EndPoint.ToString() == endPoint.ToString())
+                    return player;
             }
 
-            return false;
+            return null;
         }
 
         private void KeepAlive()
@@ -74,19 +104,8 @@ namespace Server
 
             for(int i = 0; i < players.Count; i++)
             {
-                byte[] data = new byte[0];
-
-                socket.SendTo(data, players[i].EndPoint);
-                try
-                {
-                    socket.ReceiveFrom(data, ref players[i].EndPoint);
-                    players[i].LastKeepAlive = DateTime.Now;
-                }
-                catch
-                {
-                    if(players[i].IsAlive())
-                        playerId.Add(i);
-                }
+                if(!players[i].IsAlive())
+                    playerId.Add(i);
             }
 
             for(int i = playerId.Count - 1; i >= 0; i--)

@@ -31,6 +31,7 @@ namespace Tanks
         ImageBrush player2Image = new ImageBrush();
         ImageBrush livesImage = new ImageBrush();
         Rect PlayerHitBox;
+        DateTime previous;
 
         int speed = 5;
         int playerSpeed = 3;
@@ -113,13 +114,16 @@ namespace Tanks
                 }
             }
 
-            data = new byte[0];
-            try
+            if((DateTime.Now - previous).Seconds > 30)
             {
-                socket.Receive(data);
-                socket.Send(data, SocketFlags.None);
+                data = new byte[0];
+                try
+                {
+                    socket.Receive(data);
+                    socket.Send(data, SocketFlags.None);
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -181,13 +185,13 @@ namespace Tanks
         private void StartGame()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Blocking = false;
             socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
 
             byte[] data = new byte[0];
             socket.Send(data);
+
+            previous = DateTime.Now;
 
             gameTimer.Start();
 
