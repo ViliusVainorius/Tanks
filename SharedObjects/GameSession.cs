@@ -14,6 +14,21 @@ namespace SharedObjects
         public string difficulty {get; set;}
         public Wall [] map {get; set;}
 
+        public GameSession(string difficulty, int players_count = 2)
+        {
+            start_time= DateTime.Now; 
+        }
+
+        public void GenerateMap()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void FinishGame()
+        {
+            finish_time = DateTime.Now;
+        }
 
     }
 }
