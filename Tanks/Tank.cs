@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace Tanks
 {
-    internal class Tank: Unit
+    public class Tank: Unit
     {
         public int Width { get; set; }
         public int Height { get; set; }
