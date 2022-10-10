@@ -30,19 +30,20 @@ namespace Tanks
             this.X = x;
             this.Y = y;
 
+        }
+
+        public Rectangle createTank()
+        {
             Rectangle rec = new Rectangle()
             {
-                Width = width,
-                Height = height,
+                Width = this.Width,
+                Height = this.Height,
                 Fill = Brushes.Green,
                 Stroke = Brushes.Red,
                 StrokeThickness = 2,
             };
 
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.MyCanvas.Children.Add(rec);
-            Canvas.SetTop(rec, Top);
-            Canvas.SetLeft(rec, Left);
+            return rec;
         }
 
         public void draw()

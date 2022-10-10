@@ -33,7 +33,13 @@ namespace Tanks
         ImageBrush player2Image = new ImageBrush();
         ImageBrush livesImage = new ImageBrush();
         Rect PlayerHitBox;
+
+        Rect playerHitBoxObject;
+
         DateTime previous;
+
+        Tank tank = new Tank(60, 75, 267, 135, 10, 10); //TANK OBJECT
+ 
 
         int speed = 5;
         int playerSpeed = 3;
@@ -50,6 +56,12 @@ namespace Tanks
 
             MyCanvas.Focus();
 
+            Rectangle player = tank.createTank(); //ADDING TANK TO MAIN WINDOW
+            MyCanvas.Children.Add(player);
+            Canvas.SetTop(player, 130);
+            Canvas.SetLeft(player, 135);
+            player.Fill = playerImage;
+
             gameTimer.Tick += GameLoop;
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
 
@@ -62,6 +74,7 @@ namespace Tanks
             PlayerAction action = null;
 
             PlayerHitBox = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
+            playerHitBoxObject = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
 
             if (moveLeft == true && Canvas.GetLeft(Player) > 0)
             {
@@ -219,6 +232,13 @@ namespace Tanks
             playerImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankBlue.png"));
             player2Image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
             livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));
+
+            //Tank tank = new Tank(60, 75, 267, 135, 10, 10);
+            //Rectangle player = tank.createTank();
+            //MyCanvas.Children.Add(player);
+            //Canvas.SetTop(player, 130);
+            //Canvas.SetLeft(player, 135);
+            //player.Fill = playerImage;
 
             Player.Fill = playerImage;
             Player2.Fill = player2Image;
