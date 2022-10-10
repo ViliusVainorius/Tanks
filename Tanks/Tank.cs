@@ -41,6 +41,7 @@ namespace Tanks
                 Fill = Brushes.Green,
                 Stroke = Brushes.Red,
                 StrokeThickness = 2,
+                Tag = "Player",
             };
 
             return rec;

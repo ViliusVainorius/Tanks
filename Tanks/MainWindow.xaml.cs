@@ -73,27 +73,31 @@ namespace Tanks
             byte[] data;
             PlayerAction action = null;
 
-            PlayerHitBox = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
-            playerHitBoxObject = new Rect(Canvas.GetLeft(Player), Canvas.GetTop(Player), Player.Width, Player.Height);
+            var player = MyCanvas.Children[9]; // tank/ player/ rectangle
 
-            if (moveLeft == true && Canvas.GetLeft(Player) > 0)
+
+            // tank = player
+            PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), tank.Width, tank.Height);
+            playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), tank.Width, tank.Height);
+
+            if (moveLeft == true && Canvas.GetLeft(player) > 0)
             {
-                Canvas.SetLeft(Player, Canvas.GetLeft(Player) - playerSpeed);
+                Canvas.SetLeft(player, Canvas.GetLeft(player) - playerSpeed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Left);
             }
-            if (moveRight == true && Canvas.GetLeft(Player) + 90 < Application.Current.MainWindow.Width)
+            if (moveRight == true && Canvas.GetLeft(player) + 90 < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(Player, Canvas.GetLeft(Player) + playerSpeed);
+                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Right);
             }
-            if (moveUp == true && Canvas.GetTop(Player) > 0)
+            if (moveUp == true && Canvas.GetTop(player) > 0)
             {
-                Canvas.SetTop(Player, Canvas.GetTop(Player) - playerSpeed);
+                Canvas.SetTop(player, Canvas.GetTop(player) - playerSpeed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Up);
             }
-            if (moveDown == true && Canvas.GetTop(Player) + 90 < Application.Current.MainWindow.Height)
+            if (moveDown == true && Canvas.GetTop(player) + 90 < Application.Current.MainWindow.Height)
             {
-                Canvas.SetTop(Player, Canvas.GetTop(Player) + playerSpeed);
+                Canvas.SetTop(player, Canvas.GetTop(player) + playerSpeed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Down);
             }
 
@@ -105,25 +109,25 @@ namespace Tanks
 
                     if (moveLeft == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
-                        Canvas.SetLeft(Player, Canvas.GetLeft(Player) + 10);
+                        Canvas.SetLeft(player, Canvas.GetLeft(player) + 10);
                         noMoveLeft = true;
                         moveLeft = false;
                     }
                     if (moveRight == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
-                        Canvas.SetLeft(Player, Canvas.GetLeft(Player) - 10);
+                        Canvas.SetLeft(player, Canvas.GetLeft(player) - 10);
                         noMoveRight = true;
                         moveRight = false;
                     }
                     if (moveDown == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
-                        Canvas.SetTop(Player, Canvas.GetTop(Player) - 10);
+                        Canvas.SetTop(player, Canvas.GetTop(player) - 10);
                         noMoveDown = true;
                         moveDown = false;
                     }
                     if (moveUp == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
-                        Canvas.SetTop(Player, Canvas.GetTop(Player) + 10);
+                        Canvas.SetTop(player, Canvas.GetTop(player) + 10);
                         noMoveUp = true;
                         moveUp = false;
                     }
@@ -152,31 +156,33 @@ namespace Tanks
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            var player = MyCanvas.Children[9];
+
             if (e.Key == Key.Left && noMoveLeft == false)
             {
                 moveLeft = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                Player.RenderTransform = new RotateTransform(-90, Player.Width / 2, Player.Height / 2);
+                player.RenderTransform = new RotateTransform(-90, tank.Width / 2, tank.Height / 2);
             }
             if (e.Key == Key.Right && noMoveRight == false)
             {
                 moveRight = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                Player.RenderTransform = new RotateTransform(90, Player.Width / 2, Player.Height / 2);
+                player.RenderTransform = new RotateTransform(90, tank.Width / 2, tank.Height / 2);
 
             }
             if (e.Key == Key.Up && noMoveUp == false)
             {
                 moveUp = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                Player.RenderTransform = new RotateTransform(0, Player.Width / 2, Player.Height / 2);
+                player.RenderTransform = new RotateTransform(0, tank.Width / 2, tank.Height / 2);
 
             }
             if (e.Key == Key.Down && noMoveDown == false)
             {
                 moveDown = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                Player.RenderTransform = new RotateTransform(-180, Player.Width / 2, Player.Height / 2);
+                player.RenderTransform = new RotateTransform(-180, tank.Width / 2, tank.Height / 2);
 
             }
         }
