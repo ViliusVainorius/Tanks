@@ -8,8 +8,8 @@ namespace Tanks
 {
     public class BlueLightTank : Tank
     {
-        public BlueLightTank(int width, int height, int top, int left, int x, int y)
-            : base(width, height, top, left, x, y)
+        public BlueLightTank(int width, int height, int x, int y)
+            : base(width, height, x, y)
         {
         }
     }
