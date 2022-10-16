@@ -47,6 +47,7 @@
     <Compile Include="Artifact.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="PlayerAction.cs" />

@@ -9,7 +9,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Server server = Server.Instance;
+            Server server = new Server();
             server.Start();
         }
     }

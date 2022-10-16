@@ -18,22 +18,11 @@ namespace Server
         private Socket socket;
         private List<Player> players = new List<Player>();
         private DateTime previous;
-        private static Server instance;
-        public static int port = 8888;
-        
-        public static Server Instance
-        {
-            get
-            {
-                if(instance == null)
-                {
-                    instance = new Server(port);
-                }
-                return instance;
-            }
-        }
 
-        private Server(int port)
+
+        public Server() : this(8888) { }
+
+        public Server(int port)
         {
             Console.WriteLine("Starting server on port {0}!", port);
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);

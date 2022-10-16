@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace SharedObjects
 {
     public class Tank : Unit
     {
         private Rectangle rect;
+
+        [XmlAttribute]
+        public int speed;
+
         public Rectangle Rectangle
         {
             get

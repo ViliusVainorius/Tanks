@@ -40,12 +40,6 @@ namespace Tanks
 
         DateTime previous;
 
-        int speed = 5;
-        int playerSpeed = 3;
-
-        double lives;
-        double i;
-
         bool moveLeft, moveRight, moveUp, moveDown, gameOver;
         bool noMoveLeft, noMoveRight, noMoveUp, noMoveDown;
 
@@ -63,7 +57,9 @@ namespace Tanks
 
             MyCanvas.Focus();
 
-            Tank[] tanks = GameSession.Instance.Tanks;
+            GameSession.xml = File.ReadAllText(@"C:\Users\razma\source\repos\ViliusVainorius\Tanks\SharedObjects\Maps\Map1.xml");
+
+            Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
 
             ImageBrush[] playerImages = new ImageBrush[tanks.Length];
             for(int i = 0; i < playerImages.Length; i++)
@@ -82,10 +78,7 @@ namespace Tanks
                 tanks[i].Rectangle.Fill = playerImages[i];
             }
 
-            GameSession.Instance.self = 1;
-
-            //PUTTING WALL OBJECTS TO SCREEN
-            Wall[] walls = GameSession.Instance.Walls;
+            Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
             for(int i = 0; i < walls.Length; i++)
             {
                 Rectangle wall = walls[i].createWall();
@@ -105,29 +98,30 @@ namespace Tanks
             byte[] data;
             PlayerAction action = null;
 
-            Rectangle player = GameSession.Instance.Tanks[GameSession.Instance.self].Rectangle;
+            Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
+            Rectangle player = tank.Rectangle;
 
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
 
             if (moveLeft == true && Canvas.GetLeft(player) > 0)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) - playerSpeed);
+                Canvas.SetLeft(player, Canvas.GetLeft(player) - tank.speed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Left);
             }
             if (moveRight == true && Canvas.GetLeft(player) + 90 < Application.Current.MainWindow.Width)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + playerSpeed);
+                Canvas.SetLeft(player, Canvas.GetLeft(player) + tank.speed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Right);
             }
             if (moveUp == true && Canvas.GetTop(player) > 0)
             {
-                Canvas.SetTop(player, Canvas.GetTop(player) - playerSpeed);
+                Canvas.SetTop(player, Canvas.GetTop(player) - tank.speed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Up);
             }
             if (moveDown == true && Canvas.GetTop(player) + 90 < Application.Current.MainWindow.Height)
             {
-                Canvas.SetTop(player, Canvas.GetTop(player) + playerSpeed);
+                Canvas.SetTop(player, Canvas.GetTop(player) + tank.speed);
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Down);
             }
 
@@ -186,7 +180,7 @@ namespace Tanks
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            Rectangle player = GameSession.Instance.Tanks[GameSession.Instance.self].Rectangle;
+            Rectangle player = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self].Rectangle;
             if (e.Key == Key.Left && noMoveLeft == false)
             {
                 moveLeft = true;
@@ -251,10 +245,7 @@ namespace Tanks
             moveDown = false;
             gameOver = false;
 
-            lives = 3;
-
             LivesText.Content = "Gyvybės: 3";
-
             livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));
 
 

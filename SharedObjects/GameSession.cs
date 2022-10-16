@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +15,13 @@ namespace SharedObjects
     {
         public DateTime start_time {get; set;}
         public DateTime finish_time {get; set;}
-        public int players_count {get; set;}
         public Difficulty difficulty {get; set;}
-        
-        public Tank[] Tanks;
-        public Wall[] Walls;
+        [XmlAttribute]
+        public int lives;
+        [XmlAttribute]
         public int self;
+        public GameObjectContainer GameObjectContainer;
+        public static string xml;
         
         private static GameSession instance;
 
@@ -28,7 +31,7 @@ namespace SharedObjects
             {
                 if (instance == null)
                 {
-                    instance = DeserializeXml(@"C:\Users\razma\source\repos\ViliusVainorius\Tanks\SharedObjects\Maps\Map1.xml");
+                    instance = DeserializeGameSession();
                 }
                 return instance;
             }
@@ -39,17 +42,31 @@ namespace SharedObjects
             start_time = DateTime.Now;
         }
 
-        private static GameSession DeserializeXml(string fileName)
+        private static GameSession DeserializeGameSession()
         {
             GameSession gameSession = new GameSession();
 
             XmlSerializer ser = new XmlSerializer(typeof(GameSession));
-            using (XmlReader reader = XmlReader.Create(fileName))
+            using (StringReader sr = new StringReader(xml))
             {
-                gameSession = (GameSession)ser.Deserialize(reader);
+                using (XmlReader reader = XmlReader.Create(sr))
+                {
+                    gameSession = (GameSession)ser.Deserialize(reader);
+                }
             }
 
             return gameSession;
+        }
+
+        public void DeserializeContainer()
+        {
+            GameObjectContainer = new GameObjectContainer();
+
+            XmlSerializer ser = new XmlSerializer(typeof(GameSession));
+            using (XmlReader reader = XmlReader.Create(xml))
+            {
+                GameObjectContainer = (GameObjectContainer)ser.Deserialize(reader);
+            }
         }
 
         public void GenerateMap()
