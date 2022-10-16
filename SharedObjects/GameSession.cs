@@ -3,24 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SharedObjects
 {
     public class GameSession
     {
-        public enum Difficulty
-        {
-            Easy, Medium, High
-        }
         public DateTime start_time {get; set;}
         public DateTime finish_time {get; set;}
         public int players_count {get; set;}
         public Difficulty difficulty {get; set;}
-        public Wall [] map {get; set;}
+        
+        public Tank[] Tanks;
+        public Wall[] Walls;
+        public int self;
+        
+        private static GameSession instance;
 
-        public GameSession(string difficulty, int players_count = 2)
+        public static GameSession Instance
         {
-            start_time= DateTime.Now; 
+            get
+            {
+                if (instance == null)
+                {
+                    instance = DeserializeXml(@"C:\Users\razma\source\repos\ViliusVainorius\Tanks\SharedObjects\Maps\Map1.xml");
+                }
+                return instance;
+            }
+        }
+
+        private GameSession()
+        {
+            start_time = DateTime.Now;
+        }
+
+        private static GameSession DeserializeXml(string fileName)
+        {
+            GameSession gameSession = new GameSession();
+
+            XmlSerializer ser = new XmlSerializer(typeof(GameSession));
+            using (XmlReader reader = XmlReader.Create(fileName))
+            {
+                gameSession = (GameSession)ser.Deserialize(reader);
+            }
+
+            return gameSession;
         }
 
         public void GenerateMap()
@@ -33,6 +62,9 @@ namespace SharedObjects
         {
             finish_time = DateTime.Now;
         }
-
+        public enum Difficulty
+        {
+            Easy, Medium, High
+        }
     }
 }

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GameSession>
+	<Walls>
+		<Wall Height="400" Width="30" X="35" Y="35" />
+		<Wall Height="30" Width="800" X="35" Y="35" />
+		<Wall Height="400" Width="30" X="830" Y="35" />
+		<Wall Height="30" Width="800" X="35" Y="406" />
+		<Wall Height="198" Width="30" X="276" Y="206" />
+		<Wall Height="198" Width="30" X="530" Y="65" />
+	</Walls>
+	<Tanks>
+		<Tank Width="60" Height="75" X="135" Y="267" />
+		<Tank Width="60" Height="75" X="635" Y="167" />
+	</Tanks>
+</GameSession>

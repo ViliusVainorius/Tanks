@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public interface Unit: GameObject
+    public abstract class Unit : GameObject
     {
+        protected Unit() { }
+        protected Unit(int x, int y, int width, int height) : base(x, y, width, height)
+        {
+        }
     }
 }

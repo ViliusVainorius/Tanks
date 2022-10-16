@@ -5,41 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace SharedObjects
 {
     public class Wall: Obstacle
     {
-        public int height { get; set; }
-        public int width { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public Wall() { }
+        public Wall(int x, int y, int width, int height) : base(x, y, width, height) { }
 
-        public Wall(int height, int width, int x, int y)
-        {
-            this.height = height;
-            this.width = width;
-            this.X = x;
-            this.Y = y;
-        }
-
-        public void draw()
+        public override void draw()
         {
             throw new NotImplementedException();
         }
 
-        public void getDimensions()
+        public override void getDimensions()
         {
             throw new NotImplementedException();
         }
-
 
         public Rectangle createWall()
         {
             Rectangle rec = new Rectangle()
             {
-                Width = this.width,
-                Height = this.height,
+                Width = this.Width,
+                Height = this.Height,
                 Fill = Brushes.Black,
                 Tag = "wall",
             };

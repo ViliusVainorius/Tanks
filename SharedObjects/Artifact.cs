@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    internal interface Artefact: GameObject
+    public abstract class Artifact : GameObject
     {
-
+        protected Artifact(int x, int y, int width, int height) : base(x, y, width, height)
+        {
+        }
     }
 }

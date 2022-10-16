@@ -8,16 +8,19 @@ namespace SharedObjects
 {
     public class Bullet : GameObject
     {
-        public int X { get; set; }
-        public int Y { get; set; }
         public double speed { get; set; }
 
-        public void draw()
+        public Bullet(int x, int y, int width, int height, double speed) : base(x, y, width, height)
+        {
+            this.speed = speed;
+        }
+
+        public override void draw()
         {
             throw new NotImplementedException();
         }
 
-        public void getDimensions()
+        public override void getDimensions()
         {
             throw new NotImplementedException();
         }

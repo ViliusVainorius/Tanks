@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharedObjects;
 
 namespace Tanks
 {
     public class RedLightTank : Tank
     {
-        public RedLightTank(int width, int height, int x, int y)
-            : base(width, height, x, y)
+        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height)
         {
         }
     }

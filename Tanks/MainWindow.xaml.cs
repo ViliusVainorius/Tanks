@@ -16,7 +16,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using SharedObjects;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 using Newtonsoft.Json;
+
 
 namespace Tanks
 {
@@ -29,30 +33,12 @@ namespace Tanks
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
-        ImageBrush playerImage = new ImageBrush();
-        ImageBrush player2Image = new ImageBrush();
         ImageBrush livesImage = new ImageBrush();
         Rect PlayerHitBox;
 
         Rect playerHitBoxObject;
 
         DateTime previous;
-
-        //TANK OBJECT
-        Rectangle player;
-        Rectangle player2;
-        Tank tank = new Tank(60, 75, 135, 267);
-        Tank tank2 = new Tank(60, 75, 635, 167);
-        //WALL OBJECT
-        List<Wall> walls = new List<Wall>();
-        Wall wall1 = new Wall(400, 30, 35, 35);
-        Wall wall2 = new Wall(30, 800, 35, 35);
-        Wall wall3 = new Wall(400, 30, 830, 35);
-        Wall wall4 = new Wall(30, 800, 35, 405);
-        Wall wall5 = new Wall(198, 30, 276, 207);
-        Wall wall6 = new Wall(198, 30, 530, 65);
-
-
 
         int speed = 5;
         int playerSpeed = 3;
@@ -65,49 +51,48 @@ namespace Tanks
 
         public MainWindow()
         {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Blocking = false;
+            socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
+
+            byte[] data = new byte[0];
+            socket.Send(data);
+            previous = DateTime.Now;
+
             InitializeComponent();
 
             MyCanvas.Focus();
 
-            //ADDING TANK TO MAIN WINDOW (1st MAIN PLAYER)
-            Rectangle playerTank = tank.createTank();
-            MyCanvas.Children.Add(playerTank);
-            Canvas.SetTop(playerTank, tank.Y);
-            Canvas.SetLeft(playerTank, tank.X);
-            playerTank.Fill = playerImage;
-            player = playerTank;
+            Tank[] tanks = GameSession.Instance.Tanks;
 
-            //ADDING TANK TO MAIN WINDOW (2nd OTHER PLAYER)
-            Rectangle playerTank2 = tank2.createTank();
-            MyCanvas.Children.Add(playerTank2);
-            Canvas.SetTop(playerTank2, tank2.Y);
-            Canvas.SetLeft(playerTank2, tank2.X);
-            playerTank2.Fill = player2Image;
-            player2 = playerTank2;
-
-            //TANK SKIN OVER RECTANGLE
-            //1st PLAYER SKIN (blue)
-            playerImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankBlue.png"));
-            //2nd PLAYER SKIN (red)
-            player2Image.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
-
-            //ADD ALL WALLS TO WALL LIST FOR MAPPING
-            walls.Add(wall1);
-            walls.Add(wall2);
-            walls.Add(wall3);
-            walls.Add(wall4);
-            walls.Add(wall5);
-            walls.Add(wall6);
-
-            //PUTTING WALL OBJECTS TO SCREEN
-            foreach (var item in walls)
+            ImageBrush[] playerImages = new ImageBrush[tanks.Length];
+            for(int i = 0; i < playerImages.Length; i++)
             {
-                var wall = item.createWall();
-                MyCanvas.Children.Add(wall);
-                Canvas.SetLeft(wall, item.X);
-                Canvas.SetTop(wall, item.Y);
+                playerImages[i] = new ImageBrush();
             }
 
+            playerImages[0].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankBlue.png"));
+            playerImages[1].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
+
+            for (int i = 0; i < tanks.Length; i++)
+            {
+                tanks[i].CanvasID = MyCanvas.Children.Add(tanks[i].Rectangle);
+                Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
+                Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
+                tanks[i].Rectangle.Fill = playerImages[i];
+            }
+
+            GameSession.Instance.self = 1;
+
+            //PUTTING WALL OBJECTS TO SCREEN
+            Wall[] walls = GameSession.Instance.Walls;
+            for(int i = 0; i < walls.Length; i++)
+            {
+                Rectangle wall = walls[i].createWall();
+                walls[i].CanvasID = MyCanvas.Children.Add(wall);
+                Canvas.SetLeft(wall, walls[i].X);
+                Canvas.SetTop(wall, walls[i].Y);
+            }
 
             gameTimer.Tick += GameLoop;
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
@@ -120,10 +105,10 @@ namespace Tanks
             byte[] data;
             PlayerAction action = null;
 
+            Rectangle player = GameSession.Instance.Tanks[GameSession.Instance.self].Rectangle;
 
-            // tank = player
-            PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), tank.Width, tank.Height);
-            playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), tank.Width, tank.Height);
+            PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
+            playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
 
             if (moveLeft == true && Canvas.GetLeft(player) > 0)
             {
@@ -201,32 +186,32 @@ namespace Tanks
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-
+            Rectangle player = GameSession.Instance.Tanks[GameSession.Instance.self].Rectangle;
             if (e.Key == Key.Left && noMoveLeft == false)
             {
                 moveLeft = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                player.RenderTransform = new RotateTransform(-90, tank.Width / 2, tank.Height / 2);
+                player.RenderTransform = new RotateTransform(-90, player.Width / 2, player.Height / 2);
             }
             if (e.Key == Key.Right && noMoveRight == false)
             {
                 moveRight = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                player.RenderTransform = new RotateTransform(90, tank.Width / 2, tank.Height / 2);
+                player.RenderTransform = new RotateTransform(90, player.Width / 2, player.Height / 2);
 
             }
             if (e.Key == Key.Up && noMoveUp == false)
             {
                 moveUp = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                player.RenderTransform = new RotateTransform(0, tank.Width / 2, tank.Height / 2);
+                player.RenderTransform = new RotateTransform(0, player.Width / 2, player.Height / 2);
 
             }
             if (e.Key == Key.Down && noMoveDown == false)
             {
                 moveDown = true;
                 noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
-                player.RenderTransform = new RotateTransform(-180, tank.Width / 2, tank.Height / 2);
+                player.RenderTransform = new RotateTransform(-180, player.Width / 2, player.Height / 2);
 
             }
         }
@@ -258,15 +243,6 @@ namespace Tanks
 
         private void StartGame()
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket.Blocking = false;
-            socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
-
-            byte[] data = new byte[0];
-            socket.Send(data);
-
-            previous = DateTime.Now;
-
             gameTimer.Start();
 
             moveRight = false;

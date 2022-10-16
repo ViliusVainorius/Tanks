@@ -1,33 +1,29 @@
-﻿using SharedObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Tanks
+namespace SharedObjects
 {
-    public class Tank: Unit
+    public class Tank : Unit
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public Tank(int width, int height,
-            int x, int y)
+        private Rectangle rect;
+        public Rectangle Rectangle
         {
-            this.Width = width;
-            this.Height = height;
-            this.X = x;
-            this.Y = y;
+            get
+            {
+                if(rect == null)
+                {
+                    rect = GetRectangle();
+                }
 
+                return rect;
+            }
         }
 
-        public Rectangle createTank()
+        public Tank() { }
+        public Tank(int x, int y, int width, int height) : base(x, y, width, height) { }
+
+        private Rectangle GetRectangle()
         {
             Rectangle rec = new Rectangle()
             {
@@ -42,15 +38,16 @@ namespace Tanks
             return rec;
         }
 
-        public void draw()
+        public override void draw()
         {
             throw new NotImplementedException();
         }
 
-        public void getDimensions()
+        public override void getDimensions()
         {
             throw new NotImplementedException();
         }
+
         public void shoot()
         {
             throw new NotImplementedException();

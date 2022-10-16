@@ -6,23 +6,27 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class Powerup : Artefact
+    public class Powerup : Artifact
     {
+        public PowerupType type { get; set; }
+
+        public Powerup(int x, int y, int width, int height, PowerupType type) : base(x, y, width, height)
+        {
+            this.type = type;
+        }
+
         public enum PowerupType
         {
             Live, 
             TripleShoot
         }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public PowerupType type { get; set; }
 
-        public void draw()
+        public override void draw()
         {
             throw new NotImplementedException();
         }
 
-        public void getDimensions()
+        public override void getDimensions()
         {
             throw new NotImplementedException();
         }

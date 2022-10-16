@@ -62,7 +62,6 @@
     <Compile Include="BlueLightTank.cs" />
     <Compile Include="RedHeavyTank.cs" />
     <Compile Include="RedLightTank.cs" />
-    <Compile Include="Tank.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
