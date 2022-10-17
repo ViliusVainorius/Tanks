@@ -9,6 +9,9 @@ namespace Tanks
 {
     public class BlueLightTank : Tank
     {
-        public BlueLightTank(int x, int y, int width, int height) : base(x, y, width, height) { }
+        public BlueLightTank(int x, int y, int width, int height) : base(x, y, width, height) 
+        {
+            speed = speed + 2;
+        }
     }
 }

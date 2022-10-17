@@ -60,8 +60,10 @@
     </ApplicationDefinition>
     <Compile Include="BlueHeavyTank.cs" />
     <Compile Include="BlueLightTank.cs" />
+    <Compile Include="ConcreteTeamFactory.cs" />
     <Compile Include="RedHeavyTank.cs" />
     <Compile Include="RedLightTank.cs" />
+    <Compile Include="TeamFactory.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

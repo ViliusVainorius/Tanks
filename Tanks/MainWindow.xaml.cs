@@ -57,6 +57,7 @@ namespace Tanks
 
             MyCanvas.Focus();
 
+            //GameSession.xml = File.ReadAllText(@"C:\Users\viliu\source\repos\Tanks\SharedObjects\Maps\Map1.xml");
             GameSession.xml = File.ReadAllText(@"C:\Users\razma\source\repos\ViliusVainorius\Tanks\SharedObjects\Maps\Map1.xml");
 
             Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
