@@ -58,7 +58,7 @@ namespace Tanks
             MyCanvas.Focus();
 
             //GameSession.xml = File.ReadAllText(@"C:\Users\viliu\source\repos\Tanks\SharedObjects\Maps\Map1.xml");
-            GameSession.xml = File.ReadAllText(@"C:\Users\razma\source\repos\ViliusVainorius\Tanks\SharedObjects\Maps\Map1.xml");
+            GameSession.xml = File.ReadAllText("..\\..\\..\\SharedObjects\\Maps\\Map1.xml");
 
             TeamFactory factory = new ConcreteTeamFactory();
             Tank heavyTank = factory.GetTank("Heavy"); // "Heavy" or "Light"

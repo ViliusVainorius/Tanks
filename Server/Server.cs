@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace Server
 {
-    internal class Server
+    public class Server
     {
         private Socket socket;
         private List<Player> players = new List<Player>();

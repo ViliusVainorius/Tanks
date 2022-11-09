@@ -9,6 +9,7 @@ namespace SharedObjects
     public class Tank : Unit
     {
         private Rectangle rect;
+        public bool hasTripleShoot;
 
         [XmlAttribute]
         public int speed;
@@ -27,7 +28,10 @@ namespace SharedObjects
         }
 
         public Tank() { }
-        public Tank(int x, int y, int width, int height) : base(x, y, width, height) { }
+        public Tank(int x, int y, int width, int height) : base(x, y, width, height) {
+
+            this.hasTripleShoot = false;
+        }
 
         private Rectangle GetRectangle()
         {
@@ -56,7 +60,14 @@ namespace SharedObjects
 
         public void shoot()
         {
-            throw new NotImplementedException();
+            if (hasTripleShoot)
+            { 
+                Console.WriteLine("triple shoot!");
+            }
+            else
+            {
+                Console.WriteLine("simple shoot!");
+            }
         }
     }
 }
