@@ -13,6 +13,7 @@ namespace SharedObjects
 
         [XmlAttribute]
         public int speed;
+        public int lives;
 
         public Rectangle Rectangle
         {
@@ -31,6 +32,7 @@ namespace SharedObjects
         public Tank(int x, int y, int width, int height) : base(x, y, width, height) {
 
             this.hasTripleShoot = false;
+            this.lives = 3;
         }
 
         private Rectangle GetRectangle()
@@ -67,6 +69,26 @@ namespace SharedObjects
             else
             {
                 Console.WriteLine("simple shoot!");
+            }
+        }
+        public void PickPowerup(Powerup p)
+        {
+            if (p.type is Powerup.PowerupType.Live)
+            {
+                this.lives++;
+            }
+
+            else if (p.type is Powerup.PowerupType.TripleShoot)
+            {
+                // set player's tank hasTripleShoot value to true
+            }
+        }
+        public void GetShot()
+        {
+            this.lives--;
+            if (lives == 0)
+            {
+                Console.Write("Game over!");
             }
         }
     }

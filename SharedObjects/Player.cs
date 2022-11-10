@@ -29,18 +29,5 @@ namespace SharedObjects
         {
             return !((DateTime.Now - LastKeepAlive).Minutes >= KeepAliveMinutes);
         }
-
-        public void PickPowerup(Powerup p)
-        {
-            if (p.type is Powerup.PowerupType.Live)
-            {
-                GameSession.Instance.lives++;
-            }
-
-            else if (p.type is Powerup.PowerupType.TripleShoot)
-            {
-                // set player's tank hasTripleShoot value to true
-            }
-        }
     }
 }
