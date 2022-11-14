@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace SharedObjects
 {
@@ -92,6 +94,33 @@ namespace SharedObjects
             if (lives == 0)
             {
                 Console.Write("Game over!");
+            }
+        }
+
+        public void TankCollision(Tank tank2)
+        {
+            Rect Tank1Hitbox = new Rect(this.X, this.Y, this.Width, this.Height);
+            Rect Tank2Hitbox = new Rect(tank2.X, tank2.Y, tank2.Width, tank2.Height);
+
+            
+
+
+        }
+
+        public void MaxSpawnedItems(List<Powerup> powerups)
+        {
+            if(powerups.Count < 10)
+            {
+                Powerup powerup = new Powerup(1, 1, 1, 1, Powerup.PowerupType.Live);
+
+            }
+            else if (powerups.Count < 11)
+            {
+                return;
+            }
+            else
+            {
+                powerups.RemoveAt(powerups.Count - 1);
             }
         }
     }
