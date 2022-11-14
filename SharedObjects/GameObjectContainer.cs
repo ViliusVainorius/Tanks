@@ -10,5 +10,14 @@ namespace SharedObjects
     {
         public Tank[] Tanks;
         public Wall[] Walls;
+
+        public void Update(GameObjectContainer gameObjectContainer)
+        {
+            for(int i = 0; i < Tanks.Count(); i++)
+            {
+                Tanks[i].X = gameObjectContainer.Tanks[i].X;
+                Tanks[i].Y = gameObjectContainer.Tanks[i].Y;
+            }
+        }
     }
 }

@@ -20,7 +20,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using Newtonsoft.Json;
-
+using System.Threading;
+using System.Windows.Markup;
 
 namespace Tanks
 {
@@ -49,16 +50,39 @@ namespace Tanks
             socket.Blocking = false;
             socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
 
-            byte[] data = new byte[0];
-            socket.Send(data);
+            Packet packet;
+
+            packet = new Packet(new byte[0]);
+            packet.SendData(socket);
             previous = DateTime.Now;
 
             InitializeComponent();
 
             MyCanvas.Focus();
 
-            //GameSession.xml = File.ReadAllText(@"C:\Users\viliu\source\repos\Tanks\SharedObjects\Maps\Map1.xml");
-            GameSession.xml = File.ReadAllText("..\\..\\..\\SharedObjects\\Maps\\Map1.xml");
+            while(true)
+            {
+                packet = Packet.ReceiveData(socket);
+                if (packet == null)
+                {
+                    Thread.Sleep(100);
+                    SendKeepAlive();
+                    continue;
+                }
+
+                XmlSerializer ser = new XmlSerializer(typeof(StartGamePacket));
+                using (Stream stream = new MemoryStream(packet.Data))
+                {
+                    using (XmlReader reader = XmlReader.Create(stream))
+                    {
+                        StartGamePacket startGamePacket = (StartGamePacket)ser.Deserialize(reader);
+                        GameSession.xmlFileName = startGamePacket.fileName;
+                        GameSession.Instance.self = startGamePacket.self;
+                    }
+                }
+
+                break;
+            }
 
             TeamFactory factory = new ConcreteTeamFactory();
             Tank heavyTank = factory.GetTank("Heavy"); // "Heavy" or "Light"
@@ -102,6 +126,28 @@ namespace Tanks
         {
             byte[] data;
             PlayerAction action = null;
+
+            Packet packet = Packet.ReceiveDataFrom(socket, new IPEndPoint(IPAddress.Loopback, 8888));
+
+            if (packet != null)
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(GameObjectContainer));
+                using (Stream stream = new MemoryStream(packet.Data))
+                {
+                    using (XmlReader reader = XmlReader.Create(stream))
+                    {
+                        GameObjectContainer gameObjectContainer = (GameObjectContainer)ser.Deserialize(reader);
+                        GameSession.Instance.GameObjectContainer.Update(gameObjectContainer);
+
+                        Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
+                        for (int i = 0; i < tanks.Count(); i++)
+                        {
+                            Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
+                            Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
+                        }
+                    }
+                }
+            }
 
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
@@ -171,7 +217,13 @@ namespace Tanks
                 socket.Send(data);
             }
 
-            if((DateTime.Now - previous).Seconds > 30)
+            SendKeepAlive();
+        }
+
+        private void SendKeepAlive()
+        {
+            byte[] data;
+            if ((DateTime.Now - previous).Seconds > 30)
             {
                 data = new byte[0];
                 try

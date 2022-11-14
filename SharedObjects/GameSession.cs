@@ -18,10 +18,9 @@ namespace SharedObjects
         public Difficulty difficulty {get; set;}
         [XmlAttribute]
         public int lives;
-        [XmlAttribute]
         public int self;
         public GameObjectContainer GameObjectContainer;
-        public static string xml;
+        public static string xmlFileName;
         
         private static GameSession instance;
 
@@ -47,7 +46,7 @@ namespace SharedObjects
             GameSession gameSession = new GameSession();
 
             XmlSerializer ser = new XmlSerializer(typeof(GameSession));
-            using (StringReader sr = new StringReader(xml))
+            using (StringReader sr = new StringReader(File.ReadAllText(xmlFileName)))
             {
                 using (XmlReader reader = XmlReader.Create(sr))
                 {
@@ -63,7 +62,7 @@ namespace SharedObjects
             GameObjectContainer = new GameObjectContainer();
 
             XmlSerializer ser = new XmlSerializer(typeof(GameSession));
-            using (XmlReader reader = XmlReader.Create(xml))
+            using (XmlReader reader = XmlReader.Create(File.ReadAllText(xmlFileName)))
             {
                 GameObjectContainer = (GameObjectContainer)ser.Deserialize(reader);
             }

@@ -13,6 +13,7 @@ namespace SharedObjects
         public EndPoint EndPoint;
         public DateTime LastKeepAlive;
         private int KeepAliveMinutes;
+        public bool isInGame;
 
         public Player(EndPoint EndPoint) : this(EndPoint, 1)
         {
@@ -23,6 +24,7 @@ namespace SharedObjects
             this.EndPoint = endPoint;
             this.LastKeepAlive = DateTime.Now;
             this.KeepAliveMinutes = KeepAliveMinutes;
+            this.isInGame = false;
         }
 
         public bool IsAlive()

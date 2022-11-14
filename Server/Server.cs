@@ -10,6 +10,8 @@ using System.Xml;
 using SharedObjects;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Server
 {
@@ -39,20 +41,105 @@ namespace Server
             while (true)
             {
                 KeepAlive();
+                TryStartGame();
 
-                Packet packet = ReceiveData();
+                Packet packet = Packet.ReceiveData(socket);
                 Player player = GetPlayer(packet);
 
-                if(packet != null)
+                if(packet == null)
                 {
-                    string data = Encoding.ASCII.GetString(packet.Data);
-                    try
-                    {
-                        PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
-                        Console.WriteLine("Player Action = {0}, Player Side = {1}", action.type, action.varied);
-                    }
-                    catch { }
+                    continue;
                 }
+
+                string data = Encoding.ASCII.GetString(packet.Data);
+                try
+                {
+                    PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
+                    Console.WriteLine("Player Action = {0}, Player Side = {1}", action.type, action.varied);
+
+                    foreach(Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
+                    {
+                        if(tank.player.EndPoint == player.EndPoint)
+                        {
+                            if(action.varied == (int)MoveSide.Right)
+                                tank.X = tank.X + tank.speed;
+                            else if (action.varied == (int)MoveSide.Left)
+                                tank.X = tank.X - tank.speed;
+                            else if (action.varied == (int)MoveSide.Up)
+                                tank.Y = tank.Y - tank.speed;
+                            else if (action.varied == (int)MoveSide.Down)
+                                tank.Y = tank.Y + tank.speed;
+                        }
+                    }
+
+                    foreach (Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
+                    {
+                        XmlSerializer ser = new XmlSerializer(typeof(GameObjectContainer));
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            ser.Serialize(ms, GameSession.Instance.GameObjectContainer);
+                            packet = new Packet(tank.player.EndPoint, ms.ToArray());
+                            packet.SendToEndPoint(socket);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private void TryStartGame()
+        {
+            if(players.Count >= 2)
+            {
+                int player1 = -1;
+                int player2 = -1;
+
+                for (int i = 0; i < players.Count; i++)
+                {
+                    if(!players[i].isInGame)
+                    {
+                        if(player1 == -1)
+                        {
+                            player1 = i;
+                            continue;
+                        }
+
+                        player2 = i;
+                        break;
+                    }
+                }
+
+                if(player1 == -1 || player2 == -1)
+                {
+                    return;
+                }
+
+                GameSession.xmlFileName = "..\\..\\..\\SharedObjects\\Maps\\Map1.xml";
+
+                Player player;
+                StartGamePacket startGamePacket = new StartGamePacket("..\\..\\..\\SharedObjects\\Maps\\Map1.xml", 0);
+                
+                player = players[player1];
+                GameSession.Instance.GameObjectContainer.Tanks[0].player = player;
+                XmlSerializer ser = new XmlSerializer(typeof(StartGamePacket));
+                using(MemoryStream ms = new MemoryStream())
+                {
+                    ser.Serialize(ms, startGamePacket);
+                    Packet packet = new Packet(player.EndPoint, ms.ToArray());
+                    packet.SendToEndPoint(socket);
+                }
+                players[player1].isInGame = true;
+
+                startGamePacket.self = 1;
+                player = players[player2];
+                GameSession.Instance.GameObjectContainer.Tanks[1].player = player;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ser.Serialize(ms, startGamePacket);
+                    Packet packet = new Packet(player.EndPoint, ms.ToArray());
+                    packet.SendToEndPoint(socket);
+                }
+                players[player2].isInGame = true;
             }
         }
 
@@ -74,26 +161,6 @@ namespace Server
             player.LastKeepAlive = DateTime.Now;
 
             return player;
-        }
-
-        private Packet ReceiveData()
-        {
-            byte[] data = new byte[1024];
-            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-            EndPoint Remote = (EndPoint)(sender);
-            try
-            {
-                int recv = socket.ReceiveFrom(data, ref Remote);
-            }
-            catch
-            {
-                return null;
-            }
-
-            if (Remote == (EndPoint)sender)
-                return null;
-
-            return new Packet(Remote, data);
         }
 
         private Player FindPlayer(EndPoint endPoint)

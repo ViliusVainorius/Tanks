@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<GameSession lives="3" self="0" >
+<GameSession lives="3" >
 	<GameObjectContainer>
 		<Walls>
 			<Wall Height="400" Width="30" X="35" Y="35" />
