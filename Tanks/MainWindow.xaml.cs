@@ -144,6 +144,7 @@ namespace Tanks
                         {
                             Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
                             Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
+                            tanks[i].Rectangle.RenderTransform = new RotateTransform(tanks[i].Rotation, tanks[i].Width / 2, tanks[i].Height / 2);
                         }
                     }
                 }

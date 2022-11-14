@@ -61,14 +61,26 @@ namespace Server
                     {
                         if(tank.player.EndPoint == player.EndPoint)
                         {
-                            if(action.varied == (int)MoveSide.Right)
+                            if (action.varied == (int)MoveSide.Right)
+                            {
                                 tank.X = tank.X + tank.speed;
+                                tank.Rotation = 90;
+                            }
                             else if (action.varied == (int)MoveSide.Left)
+                            {
                                 tank.X = tank.X - tank.speed;
+                                tank.Rotation = -90;
+                            }
                             else if (action.varied == (int)MoveSide.Up)
+                            {
                                 tank.Y = tank.Y - tank.speed;
+                                tank.Rotation = 0;
+                            }
                             else if (action.varied == (int)MoveSide.Down)
+                            {
                                 tank.Y = tank.Y + tank.speed;
+                                tank.Rotation = -180;
+                            }
                         }
                     }
 

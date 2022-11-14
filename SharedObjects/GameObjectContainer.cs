@@ -17,6 +17,7 @@ namespace SharedObjects
             {
                 Tanks[i].X = gameObjectContainer.Tanks[i].X;
                 Tanks[i].Y = gameObjectContainer.Tanks[i].Y;
+                Tanks[i].Rotation = gameObjectContainer.Tanks[i].Rotation;
             }
         }
     }

@@ -16,6 +16,7 @@ namespace SharedObjects
         public int lives;
         [XmlIgnore]
         public Player player;
+        public int Rotation;
 
         public Rectangle Rectangle
         {
