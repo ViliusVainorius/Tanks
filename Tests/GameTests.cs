@@ -21,6 +21,7 @@ namespace Tests
             Assert.Equal(initialLives + 1, t.lives);
         }
 
+        [Fact]
         public void GetShotTest()
         {
             Tank t = new Tank();
@@ -39,7 +40,7 @@ namespace Tests
             Assert.True(tank.Intersect(wall));
         }
 
-        // TO DO
+        [Fact]
         public void TwoTanksCollide()
         {
             Tank t1 = new Tank(10, 10, 10, 10);
@@ -47,7 +48,8 @@ namespace Tests
 
             Assert.True(t1.Intersect(t2));
         }
-        // TO DO
+
+        [Fact]
         public void MaxItemsSpawned()
         {
             Tank t = new Tank();
@@ -58,19 +60,19 @@ namespace Tests
             }
 
             Assert.Equal(10, powerups.Count);
-
         }
-        // TO DO
+
+        [Fact]
         public void StepOnMine()
         {
             bool damageDelt = false;
             Tank t1 = new Tank(10, 10, 10, 10);
-            Powerup powerup = new Powerup(1, 1, 1, 1, Powerup.PowerupType.Mine);
+            Powerup powerup = new Powerup(10, 10, 10, 10, Powerup.PowerupType.Mine);
 
 
             if (t1.Intersect(powerup))
             {
-                t1.MineDamage(damageDelt);
+                damageDelt = t1.MineDamage();
             }
 
             Assert.True(damageDelt);

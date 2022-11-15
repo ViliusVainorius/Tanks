@@ -107,7 +107,7 @@ namespace SharedObjects
             if(powerups.Count < 10)
             {
                 Powerup powerup = new Powerup(1, 1, 1, 1, Powerup.PowerupType.Live);
-
+                powerups.Add(powerup);
             }
             else if (powerups.Count < 11)
             {
@@ -119,10 +119,11 @@ namespace SharedObjects
             }
         }
 
-        public bool MineDamage(bool p)
+        public bool MineDamage()
         {
+            bool p = true;
             this.lives = this.lives-1;
-            p = true;
+            
             return p;
         }
     }
