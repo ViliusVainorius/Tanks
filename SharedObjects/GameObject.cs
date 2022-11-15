@@ -32,5 +32,13 @@ namespace SharedObjects
 
         public abstract void draw();
         public abstract void getDimensions();
+
+        public bool Intersect(GameObject other)
+        {
+            System.Drawing.Rectangle selfRect = new System.Drawing.Rectangle(X, Y, Width, Height);
+            System.Drawing.Rectangle otherRect = new System.Drawing.Rectangle(other.X, other.Y, other.Width, other.Height);
+
+            return selfRect.IntersectsWith(otherRect);
+        }
     }
 }

@@ -3,6 +3,7 @@ using SharedObjects;
 using System;
 using Tanks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace Tests
@@ -28,26 +29,23 @@ namespace Tests
 
             Assert.Equal(initialLives - 1, t.lives);
         }
-         // TO DO
+
+        [Fact]
         public void HitObstacle()
         {
+            Wall wall = new Wall(1, 1, 100, 200);
+            Tank tank = new Tank(50, 50, 100, 200);
 
+            Assert.True(tank.Intersect(wall));
         }
+
         // TO DO
         public void TwoTanksCollide()
         {
-            Tank t1 = new Tank();
-            Tank t2 = new Tank();
+            Tank t1 = new Tank(10, 10, 10, 10);
+            Tank t2 = new Tank(10, 10, 10, 10);
 
-            t1.X = 10;      t1.Y = 10;
-            t1.Width = 10;  t1.Height = 10;
-
-            t2.X = 10;      t2.Y = 10;
-            t2.Width = 10;  t2.Height = 10;
-
-            t1.TankCollision(t2);
-
-
+            Assert.True(t1.Intersect(t2));
         }
         // TO DO
         public void MaxItemsSpawned()
