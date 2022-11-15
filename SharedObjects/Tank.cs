@@ -65,6 +65,11 @@ namespace SharedObjects
             throw new NotImplementedException();
         }
 
+        public int getLives()
+        {
+            return this.lives;
+        }
+
         public void shoot()
         {
             if (hasTripleShoot)
@@ -97,16 +102,6 @@ namespace SharedObjects
             }
         }
 
-        public void TankCollision(Tank tank2)
-        {
-            Rect Tank1Hitbox = new Rect(this.X, this.Y, this.Width, this.Height);
-            Rect Tank2Hitbox = new Rect(tank2.X, tank2.Y, tank2.Width, tank2.Height);
-
-            
-
-
-        }
-
         public void MaxSpawnedItems(List<Powerup> powerups)
         {
             if(powerups.Count < 10)
@@ -122,6 +117,13 @@ namespace SharedObjects
             {
                 powerups.RemoveAt(powerups.Count - 1);
             }
+        }
+
+        public bool MineDamage(bool p)
+        {
+            this.lives = this.lives-1;
+            p = true;
+            return p;
         }
     }
 }

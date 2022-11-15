@@ -63,7 +63,17 @@ namespace Tests
         // TO DO
         public void StepOnMine()
         {
+            bool damageDelt = false;
+            Tank t1 = new Tank(10, 10, 10, 10);
+            Powerup powerup = new Powerup(1, 1, 1, 1, Powerup.PowerupType.Mine);
 
+
+            if (t1.Intersect(powerup))
+            {
+                t1.MineDamage(damageDelt);
+            }
+
+            Assert.True(damageDelt);
         }
     }
 }

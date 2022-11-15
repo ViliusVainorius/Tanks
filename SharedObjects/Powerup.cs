@@ -18,7 +18,8 @@ namespace SharedObjects
         public enum PowerupType
         {
             Live, 
-            TripleShoot
+            TripleShoot,
+            Mine
         }
 
         public override void draw()
