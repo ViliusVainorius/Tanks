@@ -10,16 +10,6 @@ namespace Tests
 {
     public class GameTests
     {
-        [Fact]
-        public void GetPowerupTest()
-        {
-            Tank t = new Tank();
-            int initialLives = t.lives;
-            Powerup powerup = new Powerup(1, 1, 1, 1, Powerup.PowerupType.Live);
-            t.PickPowerup(powerup);
-
-            Assert.Equal(initialLives + 1, t.lives);
-        }
 
         [Fact]
         public void GetShotTest()
@@ -49,18 +39,6 @@ namespace Tests
             Assert.True(t1.Intersect(t2));
         }
 
-        [Fact]
-        public void MaxItemsSpawned()
-        {
-            Tank t = new Tank();
-            List<Powerup> powerups = new List<Powerup>();
-            for (int i = 0; i < 15; i++)
-            {
-                t.MaxSpawnedItems(powerups);
-            }
-
-            Assert.Equal(10, powerups.Count);
-        }
 
         [Fact]
         public void StepOnMine()
@@ -76,6 +54,47 @@ namespace Tests
             }
 
             Assert.True(damageDelt);
+        }
+
+        [Theory]
+        [InlineData(5)]
+        [InlineData(15)]
+        [InlineData(1)]
+        public void MaxItemsSpawned(int n)
+        {
+            Tank t = new Tank();
+            List<Powerup> powerups = new List<Powerup>();
+            if (n >= 10)
+                n = 10;
+
+            for (int i = 0; i < n; i++)
+            {
+                t.MaxSpawnedItems(powerups);
+            }
+
+            Assert.Equal(n, powerups.Count);
+        }
+
+        [Theory]
+        [InlineData(Powerup.PowerupType.Live)]
+        [InlineData(Powerup.PowerupType.Mine)]
+        [InlineData(Powerup.PowerupType.TripleShoot)]
+        public void GetPowerupTest(Powerup.PowerupType type)
+        {
+            Tank t = new Tank();
+            int initialLives = t.lives;
+            Powerup powerup = new Powerup(1, 1, 1, 1, type);
+            t.PickPowerup(powerup);
+
+            if (type == Powerup.PowerupType.Live)
+            {
+                Assert.Equal(initialLives + 1, t.lives);
+            }
+            else
+            {
+                Assert.Equal(initialLives, t.lives);
+            }
+
         }
     }
 }
