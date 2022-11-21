@@ -14,6 +14,7 @@ namespace SharedObjects
 
         [XmlAttribute]
         public int speed;
+        [XmlAttribute]
         public int lives;
         [XmlIgnore]
         public Player player;
