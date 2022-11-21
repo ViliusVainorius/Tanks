@@ -7,9 +7,9 @@ using SharedObjects;
 
 namespace Tanks
 {
-    public class BlueLightTank : Tank
+    public class BlueLightTank2 : Tank
     {
-        public BlueLightTank(int x, int y, int width, int height) : base(x, y, width, height, 5) 
+        public BlueLightTank2(int x, int y, int width, int height) : base(x, y, width, height, 5) 
         {
         }
     }

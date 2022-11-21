@@ -84,9 +84,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BlueHeavyTank.cs" />
-    <Compile Include="BlueLightTank.cs" />
-    <Compile Include="ConcreteTeamFactory.cs" />
+    <Compile Include="BlueHeavyTank2.cs" />
+    <Compile Include="BlueLightTank2.cs" />
+    <Compile Include="FactoryCreator2.cs" />
     <Compile Include="RedHeavyTank.cs" />
     <Compile Include="RedLightTank.cs" />
     <Compile Include="TeamFactory.cs" />

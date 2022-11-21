@@ -83,9 +83,6 @@ namespace Tanks
                 break;
             }
 
-            TeamFactory factory = new ConcreteTeamFactory();
-            Tank heavyTank = factory.GetTank("Heavy"); // "Heavy" or "Light"
-
             //GameSession.Instance.GameObjectContainer.Tanks.Append(heavyTank);
             Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
 

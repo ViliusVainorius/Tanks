@@ -64,9 +64,13 @@ namespace SharedObjects
                         walls.Add(new Wall(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height"))));
                         break;
                     case "Tank":
-                        Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
-                        tank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
-                        tanks.Add(tank);
+                        string temp = "Heavy";
+                        Creator ctr = new TankCreator();
+                        Tank MyTank = ctr.factoryMethod("H", int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+
+                        //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
+                        MyTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
+                        tanks.Add(MyTank);
                         break;
                     case "HealthPowerup":
                         powerups.Add(new HealthPowerup(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height"))));
