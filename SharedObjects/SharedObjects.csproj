@@ -67,13 +67,14 @@
   <ItemGroup>
     <Compile Include="ActionController.cs" />
     <Compile Include="Artifact.cs" />
+    <Compile Include="BlueHeavyTank.cs" />
+    <Compile Include="BlueLightTank.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandMoveDown.cs" />
     <Compile Include="CommandMoveUp.cs" />
     <Compile Include="CommandMoveRight.cs" />
     <Compile Include="CommandMoveLeft.cs" />
-    <Compile Include="CommandShoot.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="SpeedPowerup.cs" />
     <Compile Include="StartGamePacket.cs" />
     <Compile Include="Tank.cs" />
+    <Compile Include="TankCreator.cs" />
     <Compile Include="TripleShotPowerup.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="UsedPowerup.cs" />

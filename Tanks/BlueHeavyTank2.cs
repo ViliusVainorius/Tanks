@@ -8,10 +8,11 @@ using SharedObjects;
 
 namespace Tanks
 {
-    public class BlueHeavyTank : Tank
+    public class BlueHeavyTank2 : Tank
     {
-        public BlueHeavyTank(int x, int y, int width, int height) : base(x, y, width, height, 1)
+        public BlueHeavyTank2(int x, int y, int width, int height) : base(x, y, width, height, 1)
         {
+            this.speed = speed - 2;
         }
     }
 }

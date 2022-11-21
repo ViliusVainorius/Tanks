@@ -11,7 +11,7 @@ namespace Tests
     public class GameTests
     {
 
-        [Fact]
+        //[Fact]
         /*public void GetShotTest()
         {
             Tank t = new Tank();
