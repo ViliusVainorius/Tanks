@@ -116,7 +116,7 @@ namespace SharedObjects
                 writer.WriteAttributeString("Width", tank.Width.ToString());
                 writer.WriteAttributeString("X", tank.X.ToString());
                 writer.WriteAttributeString("Y", tank.Y.ToString());
-                writer.WriteAttributeString("Speed", tank.speed.ToString());
+                writer.WriteAttributeString("speed", tank.speed.ToString());
                 writer.WriteAttributeString("Rotation", tank.Rotation.ToString());
                 writer.WriteEndElement();
             }
