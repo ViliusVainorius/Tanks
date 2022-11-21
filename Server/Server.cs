@@ -57,34 +57,45 @@ namespace Server
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
                     Console.WriteLine("Player Action = {0}, Player Side = {1}", action.type, action.varied);
 
-                    foreach(Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
+                    Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
+                    for(int i = 0; i < tanks.Length; i++)
                     {
-                        if(tank.player.EndPoint == player.EndPoint)
+                        if(tanks[i].player.EndPoint == player.EndPoint)
                         {
                             ActionController controller = new ActionController();
 
                             if (action.varied == (int)MoveSide.Right)
                             {
-                                controller.SetCommand(new CommandMoveRight(tank));
-                                tank.Rotation = 90;
+                                controller.SetCommand(new CommandMoveRight(tanks[i]));
+                                tanks[i].Rotation = 90;
                             }
                             else if (action.varied == (int)MoveSide.Left)
                             {
-                                controller.SetCommand(new CommandMoveLeft(tank));
-                                tank.Rotation = -90;
+                                controller.SetCommand(new CommandMoveLeft(tanks[i]));
+                                tanks[i].Rotation = -90;
                             }
                             else if (action.varied == (int)MoveSide.Up)
                             {
-                                controller.SetCommand(new CommandMoveUp(tank));
-                                tank.Rotation = 0;
+                                controller.SetCommand(new CommandMoveUp(tanks[i]));
+                                tanks[i].Rotation = 0;
                             }
                             else if (action.varied == (int)MoveSide.Down)
                             {
-                                controller.SetCommand(new CommandMoveDown(tank));
-                                tank.Rotation = -180;
+                                controller.SetCommand(new CommandMoveDown(tanks[i]));
+                                tanks[i].Rotation = -180;
                             }
 
                             controller.Execute();
+                        }
+
+                        Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
+                        for (int j = 0; j < powerups.Length; j++)
+                        {
+                            if (powerups[j] != null && tanks[i].Intersect(powerups[j]))
+                            {
+                                powerups[j].PickUp(ref tanks[i]);
+                                powerups[j] = new UsedPowerup();
+                            }
                         }
                     }
 

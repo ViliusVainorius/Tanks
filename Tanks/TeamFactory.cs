@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tanks
 {
-    public abstract class TeamFactory : Tank
+    public abstract class TeamFactory
     {
         public abstract Tank GetTank(string name);
     }

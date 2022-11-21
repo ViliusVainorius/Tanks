@@ -70,7 +70,7 @@ namespace SharedObjects
 
         public void GenerateMap()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         // this method will be called when game is over (one player looses or wins)

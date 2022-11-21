@@ -11,7 +11,6 @@ namespace SharedObjects
 {
     public class Wall: Obstacle
     {
-        public Wall() { }
         public Wall(int x, int y, int width, int height) : base(x, y, width, height) { }
 
         public override void draw()
@@ -24,7 +23,7 @@ namespace SharedObjects
             throw new NotImplementedException();
         }
 
-        public Rectangle createWall()
+        public override Rectangle GetNewRectangle()
         {
             Rectangle rec = new Rectangle()
             {

@@ -76,6 +76,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />
+    <Compile Include="HealthPowerup.cs" />
     <Compile Include="NoCommand.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="PlayerAction.cs" />
@@ -83,9 +84,12 @@
     <Compile Include="Player.cs" />
     <Compile Include="Powerup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpeedPowerup.cs" />
     <Compile Include="StartGamePacket.cs" />
     <Compile Include="Tank.cs" />
+    <Compile Include="TripleShotPowerup.cs" />
     <Compile Include="Unit.cs" />
+    <Compile Include="UsedPowerup.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
   <ItemGroup>

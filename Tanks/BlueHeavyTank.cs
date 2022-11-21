@@ -10,9 +10,8 @@ namespace Tanks
 {
     public class BlueHeavyTank : Tank
     {
-        public BlueHeavyTank(int x, int y, int width, int height) : base(x, y, width, height)
+        public BlueHeavyTank(int x, int y, int width, int height) : base(x, y, width, height, 1)
         {
-            speed = speed / 2;
         }
     }
 }

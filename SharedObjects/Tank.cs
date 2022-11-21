@@ -10,7 +10,6 @@ namespace SharedObjects
 {
     public class Tank : Unit
     {
-        private Rectangle rect;
         public bool hasTripleShoot;
 
         [XmlAttribute]
@@ -20,27 +19,15 @@ namespace SharedObjects
         public Player player;
         public int Rotation;
 
-        public Rectangle Rectangle
-        {
-            get
-            {
-                if(rect == null)
-                {
-                    rect = GetRectangle();
-                }
 
-                return rect;
-            }
-        }
-
-        public Tank() { }
-        public Tank(int x, int y, int width, int height) : base(x, y, width, height) {
+        public Tank(int x, int y, int width, int height, int speed) : base(x, y, width, height) {
 
             this.hasTripleShoot = false;
             this.lives = 3;
+            this.speed = speed;
         }
 
-        private Rectangle GetRectangle()
+        public override Rectangle GetNewRectangle()
         {
             Rectangle rec = new Rectangle()
             {
@@ -81,7 +68,7 @@ namespace SharedObjects
                 Console.WriteLine("simple shoot!");
             }
         }
-        public void PickPowerup(Powerup p)
+        /*public void PickPowerup(Powerup p)
         {
             if (p.type is Powerup.PowerupType.Live)
             {
@@ -117,7 +104,7 @@ namespace SharedObjects
             {
                 powerups.RemoveAt(powerups.Count - 1);
             }
-        }
+        }*/
 
         public bool MineDamage()
         {

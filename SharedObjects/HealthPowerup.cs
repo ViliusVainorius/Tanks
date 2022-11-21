@@ -3,28 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media;
 
 namespace SharedObjects
 {
-    public abstract class Bullet : GameObject
+    public class HealthPowerup : Powerup
     {
-        public double speed { get; set; }
-
-        public Bullet(int x, int y, int width, int height, double speed) : base(x, y, width, height)
+        public HealthPowerup(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            this.speed = speed;
+
         }
 
-        public override void draw()
+        public override void PickUp(ref Tank tank)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void getDimensions()
-        {
-            throw new NotImplementedException();
+            tank.lives = tank.lives + 1 >= 3 ? 3 : tank.lives + 1;
         }
 
         public override Rectangle GetNewRectangle()
@@ -34,9 +28,9 @@ namespace SharedObjects
                 Width = this.Width,
                 Height = this.Height,
                 Fill = Brushes.Green,
-                Stroke = Brushes.Purple,
+                Stroke = Brushes.Orange,
                 StrokeThickness = 2,
-                Tag = "Bullet",
+                Tag = "Powerup",
             };
 
             return rec;

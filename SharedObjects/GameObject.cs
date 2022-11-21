@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
 
@@ -10,6 +11,7 @@ namespace SharedObjects
 {
     public abstract class GameObject
     {
+        Rectangle rect;
         [XmlAttribute]
         public int X { get; set; }
         [XmlAttribute]
@@ -32,6 +34,7 @@ namespace SharedObjects
 
         public abstract void draw();
         public abstract void getDimensions();
+        public abstract Rectangle GetNewRectangle();
 
         public bool Intersect(GameObject other)
         {
@@ -46,6 +49,19 @@ namespace SharedObjects
             System.Drawing.Rectangle selfRect = new System.Drawing.Rectangle(X, Y, Width, Height);
 
             return selfRect.IntersectsWith(other);
+        }
+
+        public Rectangle Rectangle
+        {
+            get
+            {
+                if (rect == null)
+                {
+                    rect = GetNewRectangle();
+                }
+
+                return rect;
+            }
         }
     }
 }

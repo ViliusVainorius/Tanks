@@ -8,23 +8,16 @@ using System.Windows.Media;
 
 namespace SharedObjects
 {
-    public abstract class Bullet : GameObject
+    public class TripleShotPowerup : Powerup
     {
-        public double speed { get; set; }
-
-        public Bullet(int x, int y, int width, int height, double speed) : base(x, y, width, height)
+        public TripleShotPowerup(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            this.speed = speed;
+
         }
 
-        public override void draw()
+        public override void PickUp(ref Tank tank)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void getDimensions()
-        {
-            throw new NotImplementedException();
+            tank.hasTripleShoot = true;
         }
 
         public override Rectangle GetNewRectangle()
@@ -34,9 +27,9 @@ namespace SharedObjects
                 Width = this.Width,
                 Height = this.Height,
                 Fill = Brushes.Green,
-                Stroke = Brushes.Purple,
+                Stroke = Brushes.Orange,
                 StrokeThickness = 2,
-                Tag = "Bullet",
+                Tag = "Powerup",
             };
 
             return rec;

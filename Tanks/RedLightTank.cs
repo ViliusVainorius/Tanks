@@ -9,7 +9,7 @@ namespace Tanks
 {
     public class RedLightTank : Tank
     {
-        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height)
+        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height, 5)
         {
         }
     }

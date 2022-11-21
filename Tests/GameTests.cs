@@ -12,7 +12,7 @@ namespace Tests
     {
 
         [Fact]
-        public void GetShotTest()
+        /*public void GetShotTest()
         {
             Tank t = new Tank();
             int initialLives = t.lives;
@@ -95,6 +95,6 @@ namespace Tests
                 Assert.Equal(initialLives, t.lives);
             }
 
-        }
+        }*/
     }
 }

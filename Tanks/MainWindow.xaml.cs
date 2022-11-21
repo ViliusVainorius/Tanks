@@ -42,7 +42,6 @@ namespace Tanks
         DateTime previous;
 
         bool moveLeft, moveRight, moveUp, moveDown, gameOver;
-        bool noMoveLeft, noMoveRight, noMoveUp, noMoveDown;
 
         public MainWindow()
         {
@@ -110,10 +109,19 @@ namespace Tanks
             Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
             for(int i = 0; i < walls.Length; i++)
             {
-                Rectangle wall = walls[i].createWall();
+                Rectangle wall = walls[i].Rectangle;
                 walls[i].CanvasID = MyCanvas.Children.Add(wall);
                 Canvas.SetLeft(wall, walls[i].X);
                 Canvas.SetTop(wall, walls[i].Y);
+            }
+
+            Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
+            for (int i = 0; i < powerups.Length; i++)
+            {
+                Rectangle powerup = powerups[i].Rectangle;
+                walls[i].CanvasID = MyCanvas.Children.Add(powerup);
+                Canvas.SetLeft(powerup, powerups[i].X);
+                Canvas.SetTop(powerup, powerups[i].Y);
             }
 
             gameTimer.Tick += GameLoop;
@@ -128,6 +136,7 @@ namespace Tanks
             PlayerAction action = null;
 
             Packet packet = Packet.ReceiveDataFrom(socket, new IPEndPoint(IPAddress.Loopback, 8888));
+            Powerup[] powerups; 
 
             if (packet != null)
             {
@@ -146,13 +155,21 @@ namespace Tanks
                             Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
                             tanks[i].Rectangle.RenderTransform = new RotateTransform(tanks[i].Rotation, tanks[i].Width / 2, tanks[i].Height / 2);
                         }
+
+                        powerups = GameSession.Instance.GameObjectContainer.Powerups;
+                        foreach(Powerup powerup in powerups)
+                        {
+                            if(powerup.GetType() == new UsedPowerup().GetType())
+                            {
+                                MyCanvas.Children.Remove(powerup.Rectangle);
+                            }
+                        }
                     }
                 }
             }
 
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
-
 
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);

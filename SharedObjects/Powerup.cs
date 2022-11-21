@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace SharedObjects
 {
     public class Powerup : Artifact
     {
-        public PowerupType type { get; set; }
-
-        public Powerup(int x, int y, int width, int height, PowerupType type) : base(x, y, width, height)
+        protected Powerup(int x, int y, int width, int height) : base(x, y, width, height)
         {
-            this.type = type;
-        }
 
-        public enum PowerupType
-        {
-            Live, 
-            TripleShoot,
-            Mine
         }
 
         public override void draw()
@@ -30,6 +25,16 @@ namespace SharedObjects
         public override void getDimensions()
         {
             throw new NotImplementedException();
+        }
+
+        public virtual void PickUp(ref Tank tank)
+        {
+
+        }
+
+        public override Rectangle GetNewRectangle()
+        {
+            return null;
         }
     }
 }
