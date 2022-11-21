@@ -8,13 +8,15 @@ using System.Windows.Media;
 
 namespace SharedObjects
 {
-    public abstract class Bullet : GameObject
+    public class Bullet : GameObject
     {
-        public double speed { get; set; }
+        public int speed;
+        public int bulletId;
 
-        public Bullet(int x, int y, int width, int height, double speed) : base(x, y, width, height)
+        public Bullet(int x, int y, int width, int height, int speed, int bulletId) : base(x, y, width, height)
         {
             this.speed = speed;
+            this.bulletId = bulletId;
         }
 
         public override void draw()

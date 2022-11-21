@@ -73,6 +73,7 @@
     <Compile Include="CommandMoveUp.cs" />
     <Compile Include="CommandMoveRight.cs" />
     <Compile Include="CommandMoveLeft.cs" />
+    <Compile Include="CommandShoot.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />

@@ -10,8 +10,8 @@
 			<Wall Height="198" Width="30" X="530" Y="65" />
 		</Walls>
 		<Tanks>
-			<Tank Width="60" Height="75" X="135" Y="267" speed="3" lives="3" Type="Heavy" Rotation="0" />
-			<Tank Width="60" Height="75" X="635" Y="167" speed="3" lives="3" Type="Light" Rotation="0" />
+			<Tank Width="60" Height="75" X="135" Y="267" speed="3" lives="3" Type="Heavy" Rotation="0" side="0" />
+			<Tank Width="60" Height="75" X="635" Y="167" speed="3" lives="3" Type="Light" Rotation="0" side="0" />
 		</Tanks>
 		<Powerups>
 			<HealthPowerup Height="100" Width="100" X="100" Y="100" />

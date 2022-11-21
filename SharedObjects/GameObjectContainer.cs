@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace SharedObjects
         public Tank[] Tanks;
         public Wall[] Walls;
         public Powerup[] Powerups;
+        public Bullet[] Bullets;
+        public Bullet[] remove;
 
         public void Update(GameObjectContainer gameObjectContainer)
         {
@@ -36,6 +39,60 @@ namespace SharedObjects
                     Powerups[i] = powerup;
                 }
             }
+
+            
+            if (Bullets.Length == 0)
+            {
+                Bullets = gameObjectContainer.Bullets;
+                remove = new Bullet[0];
+            }
+            else
+            {
+                List<Bullet> bullets = new List<Bullet>();
+                List<Bullet> remove = new List<Bullet>();
+ 
+                for (int i = 0; i < Bullets.Length; i++)
+                {
+                    bool found = false;
+                    foreach (Bullet bullet in gameObjectContainer.Bullets)
+                    {
+                        if (bullet.bulletId == Bullets[i].bulletId)
+                        {
+                            found = true;
+                            Bullets[i].X = bullet.X;
+                            Bullets[i].Y = bullet.Y;
+                            bullets.Add(Bullets[i]);
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        remove.Add(Bullets[i]);
+                    }
+                }
+
+                foreach(Bullet bullet in gameObjectContainer.Bullets)
+                {
+                    bool found = false;
+                    for (int i = 0; i < Bullets.Length; i++)
+                    {
+                        if (bullet.bulletId == Bullets[i].bulletId)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        bullets.Add(bullet);
+                    }
+                }
+
+                Bullets = bullets.ToArray();
+                this.remove = remove.ToArray();
+            }
         }
 
         public XmlSchema GetSchema()
@@ -50,6 +107,7 @@ namespace SharedObjects
             List<Tank> tanks = new List<Tank>();
             List<Wall> walls = new List<Wall>();
             List<Powerup> powerups = new List<Powerup>();
+            List<Bullet> bullets = new List<Bullet>();
 
             while (reader.Read())
             {
@@ -66,7 +124,11 @@ namespace SharedObjects
                     case "Tank":
                         Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("speed")));
                         tank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
+                        tank.side = (FacingSide)int.Parse(reader.GetAttribute("side"));
                         tanks.Add(tank);
+                        break;
+                    case "Bullet":
+                        bullets.Add(new Bullet(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("speed")), int.Parse(reader.GetAttribute("bulletId"))));
                         break;
                     case "HealthPowerup":
                         powerups.Add(new HealthPowerup(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height"))));
@@ -86,6 +148,7 @@ namespace SharedObjects
             Tanks = tanks.ToArray();
             Walls = walls.ToArray();
             Powerups = powerups.ToArray();
+            Bullets = bullets.ToArray();
         }
 
         public void WriteXml(XmlWriter writer)
@@ -114,6 +177,8 @@ namespace SharedObjects
                 writer.WriteAttributeString("Y", tank.Y.ToString());
                 writer.WriteAttributeString("speed", tank.speed.ToString());
                 writer.WriteAttributeString("Rotation", tank.Rotation.ToString());
+                int side = (int)tank.side;
+                writer.WriteAttributeString("side", side.ToString());
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();
@@ -126,6 +191,20 @@ namespace SharedObjects
                 writer.WriteAttributeString("Width", powerup.Width.ToString());
                 writer.WriteAttributeString("X", powerup.X.ToString());
                 writer.WriteAttributeString("Y", powerup.Y.ToString());
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Bullets");
+            foreach (Bullet bullet in Bullets)
+            {
+                writer.WriteStartElement(bullet.GetType().Name);
+                writer.WriteAttributeString("Height", bullet.Height.ToString());
+                writer.WriteAttributeString("Width", bullet.Width.ToString());
+                writer.WriteAttributeString("X", bullet.X.ToString());
+                writer.WriteAttributeString("Y", bullet.Y.ToString());
+                writer.WriteAttributeString("speed", bullet.speed.ToString());
+                writer.WriteAttributeString("bulletId", bullet.bulletId.ToString());
                 writer.WriteEndElement();
             }
             writer.WriteEndElement();

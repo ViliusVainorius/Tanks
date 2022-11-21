@@ -19,7 +19,7 @@ namespace SharedObjects
         [XmlIgnore]
         public Player player;
         public int Rotation;
-
+        public FacingSide side;
 
         public Tank(int x, int y, int width, int height, int speed) : base(x, y, width, height) {
 

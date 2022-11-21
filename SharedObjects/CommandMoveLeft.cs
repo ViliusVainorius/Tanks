@@ -47,6 +47,7 @@ namespace SharedObjects
             }
 
             tank.X = x;
+            tank.side = FacingSide.Left;
         }
     }
 }

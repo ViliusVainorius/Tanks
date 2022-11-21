@@ -41,7 +41,7 @@ namespace Tanks
 
         DateTime previous;
 
-        bool moveLeft, moveRight, moveUp, moveDown, gameOver;
+        bool moveLeft, moveRight, moveUp, moveDown, gameOver, shoot;
 
         public MainWindow()
         {
@@ -136,7 +136,8 @@ namespace Tanks
             PlayerAction action = null;
 
             Packet packet = Packet.ReceiveDataFrom(socket, new IPEndPoint(IPAddress.Loopback, 8888));
-            Powerup[] powerups; 
+            Powerup[] powerups;
+            Bullet[] bullets = null;
 
             if (packet != null)
             {
@@ -156,13 +157,29 @@ namespace Tanks
                             tanks[i].Rectangle.RenderTransform = new RotateTransform(tanks[i].Rotation, tanks[i].Width / 2, tanks[i].Height / 2);
                         }
 
-                        powerups = GameSession.Instance.GameObjectContainer.Powerups;
-                        foreach(Powerup powerup in powerups)
+                        foreach(Powerup powerup in GameSession.Instance.GameObjectContainer.Powerups)
                         {
                             if(powerup.GetType() == new UsedPowerup().GetType())
                             {
                                 MyCanvas.Children.Remove(powerup.Rectangle);
                             }
+                        }
+
+                        foreach(Bullet bullet in GameSession.Instance.GameObjectContainer.Bullets)
+                        {
+                            try
+                            {
+                                MyCanvas.Children.Add(bullet.Rectangle);
+                            }
+                            catch { }
+
+                            Canvas.SetLeft(bullet.Rectangle, bullet.Y);
+                            Canvas.SetTop(bullet.Rectangle, bullet.X);
+                        }
+
+                        foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.remove)
+                        {
+                            MyCanvas.Children.Remove(bullet.Rectangle);
                         }
                     }
                 }
@@ -180,22 +197,26 @@ namespace Tanks
             if (moveLeft == true)
             {
                 controller.SetCommand(new CommandMoveLeft(tank));
-                action = new PlayerAction(ActionType.move, (int)MoveSide.Left);
+                action = new PlayerAction(ActionType.move, FacingSide.Left);
             }
             if (moveRight == true)
             {
                 controller.SetCommand(new CommandMoveRight(tank));
-                action = new PlayerAction(ActionType.move, (int)MoveSide.Right);
+                action = new PlayerAction(ActionType.move, FacingSide.Right);
             }
             if (moveUp == true)
             {
                 controller.SetCommand(new CommandMoveUp(tank));
-                action = new PlayerAction(ActionType.move, (int)MoveSide.Up);
+                action = new PlayerAction(ActionType.move, FacingSide.Up);
             }
             if (moveDown == true)
             {
                 controller.SetCommand(new CommandMoveDown(tank));
-                action = new PlayerAction(ActionType.move, (int)MoveSide.Down);
+                action = new PlayerAction(ActionType.move, FacingSide.Down);
+            }
+            if (shoot == true)
+            {
+                action = new PlayerAction(ActionType.shoot, tank.side);
             }
 
             controller.Execute();
@@ -251,6 +272,10 @@ namespace Tanks
             {
                 moveDown = true;
                 player.RenderTransform = new RotateTransform(-180, player.Width / 2, player.Height / 2);
+            }
+            if (e.Key == Key.Space)
+            {
+                shoot = true;
             }
         }
 

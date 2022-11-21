@@ -20,6 +20,7 @@ namespace Server
         private Socket socket;
         private List<Player> players = new List<Player>();
         private DateTime previous;
+        private int bulletId = 0;
 
 
         public Server() : this(8888) { }
@@ -55,7 +56,6 @@ namespace Server
                 try
                 {
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
-                    Console.WriteLine("Player Action = {0}, Player Side = {1}", action.type, action.varied);
 
                     Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
                     for(int i = 0; i < tanks.Length; i++)
@@ -64,25 +64,53 @@ namespace Server
                         {
                             ActionController controller = new ActionController();
 
-                            if (action.varied == (int)MoveSide.Right)
+                            if (action.side == FacingSide.Right)
                             {
-                                controller.SetCommand(new CommandMoveRight(tanks[i]));
-                                tanks[i].Rotation = 90;
+                                if (action.type == ActionType.move)
+                                {
+                                    controller.SetCommand(new CommandMoveRight(tanks[i]));
+                                    tanks[i].Rotation = 90;
+                                }
+                                else if(action.type == ActionType.shoot)
+                                {
+
+                                }
                             }
-                            else if (action.varied == (int)MoveSide.Left)
+                            else if (action.side == FacingSide.Left)
                             {
-                                controller.SetCommand(new CommandMoveLeft(tanks[i]));
-                                tanks[i].Rotation = -90;
+                                if (action.type == ActionType.move)
+                                {
+                                    controller.SetCommand(new CommandMoveLeft(tanks[i]));
+                                    tanks[i].Rotation = -90;
+                                }
+                                else if (action.type == ActionType.shoot)
+                                {
+
+                                }
                             }
-                            else if (action.varied == (int)MoveSide.Up)
+                            else if (action.side == FacingSide.Up)
                             {
-                                controller.SetCommand(new CommandMoveUp(tanks[i]));
-                                tanks[i].Rotation = 0;
+                                if (action.type == ActionType.move)
+                                {
+                                    controller.SetCommand(new CommandMoveUp(tanks[i]));
+                                    tanks[i].Rotation = 0;
+                                }
+                                else if (action.type == ActionType.shoot)
+                                {
+
+                                }
                             }
-                            else if (action.varied == (int)MoveSide.Down)
+                            else if (action.side == FacingSide.Down)
                             {
-                                controller.SetCommand(new CommandMoveDown(tanks[i]));
-                                tanks[i].Rotation = -180;
+                                if (action.type == ActionType.move)
+                                {
+                                    controller.SetCommand(new CommandMoveDown(tanks[i]));
+                                    tanks[i].Rotation = -180;
+                                }
+                                else if (action.type == ActionType.shoot)
+                                {
+
+                                }
                             }
 
                             controller.Execute();

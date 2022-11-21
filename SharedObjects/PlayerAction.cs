@@ -9,16 +9,16 @@ namespace SharedObjects
     public class PlayerAction
     {
         public ActionType type;
-        public int varied;
+        public FacingSide side;
 
-        public PlayerAction(ActionType type, int varied)
+        public PlayerAction(ActionType type, FacingSide side)
         {
             this.type = type;
-            this.varied = varied;
+            this.side = side;
         }
     }
 
-    public enum MoveSide
+    public enum FacingSide
     {
         Up,
         Down,
@@ -28,6 +28,7 @@ namespace SharedObjects
 
     public enum ActionType
     {
-        move
+        move,
+        shoot
     }
 }
