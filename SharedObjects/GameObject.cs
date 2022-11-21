@@ -40,5 +40,12 @@ namespace SharedObjects
 
             return selfRect.IntersectsWith(otherRect);
         }
+
+        public bool Intersect(System.Drawing.Rectangle other)
+        {
+            System.Drawing.Rectangle selfRect = new System.Drawing.Rectangle(X, Y, Width, Height);
+
+            return selfRect.IntersectsWith(other);
+        }
     }
 }

@@ -153,65 +153,37 @@ namespace Tanks
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
+
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
+            ActionController controller = new ActionController();
 
-            if (moveLeft == true && Canvas.GetLeft(player) > 0)
+            if (moveLeft == true)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) - tank.speed);
+                controller.SetCommand(new CommandMoveLeft(tank));
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Left);
             }
-            if (moveRight == true && Canvas.GetLeft(player) + 90 < Application.Current.MainWindow.Width)
+            if (moveRight == true)
             {
-                Canvas.SetLeft(player, Canvas.GetLeft(player) + tank.speed);
+                controller.SetCommand(new CommandMoveRight(tank));
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Right);
             }
-            if (moveUp == true && Canvas.GetTop(player) > 0)
+            if (moveUp == true)
             {
-                Canvas.SetTop(player, Canvas.GetTop(player) - tank.speed);
+                controller.SetCommand(new CommandMoveUp(tank));
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Up);
             }
-            if (moveDown == true && Canvas.GetTop(player) + 90 < Application.Current.MainWindow.Height)
+            if (moveDown == true)
             {
-                Canvas.SetTop(player, Canvas.GetTop(player) + tank.speed);
+                controller.SetCommand(new CommandMoveDown(tank));
                 action = new PlayerAction(ActionType.move, (int)MoveSide.Down);
             }
 
-            foreach (var x in MyCanvas.Children.OfType<Rectangle>())
-            {
-                if((string)x.Tag == "wall")
-                {
-                    Rect wallHitBox = new Rect(Canvas.GetLeft(x), Canvas.GetTop(x), x.Width, x.Height);
+            controller.Execute();
+            Canvas.SetTop(player, tank.Y);
+            Canvas.SetLeft(player, tank.X);
 
-                    if (moveLeft == true && PlayerHitBox.IntersectsWith(wallHitBox))
-                    {
-                        Canvas.SetLeft(player, Canvas.GetLeft(player) + 10);
-                        noMoveLeft = true;
-                        moveLeft = false;
-                    }
-                    if (moveRight == true && PlayerHitBox.IntersectsWith(wallHitBox))
-                    {
-                        Canvas.SetLeft(player, Canvas.GetLeft(player) - 10);
-                        noMoveRight = true;
-                        moveRight = false;
-                    }
-                    if (moveDown == true && PlayerHitBox.IntersectsWith(wallHitBox))
-                    {
-                        Canvas.SetTop(player, Canvas.GetTop(player) - 10);
-                        noMoveDown = true;
-                        moveDown = false;
-                    }
-                    if (moveUp == true && PlayerHitBox.IntersectsWith(wallHitBox))
-                    {
-                        Canvas.SetTop(player, Canvas.GetTop(player) + 10);
-                        noMoveUp = true;
-                        moveUp = false;
-                    }
-
-                }
-            }
-
-            if(action != null)
+            if (action != null)
             {
                 string json = JsonConvert.SerializeObject(action);
                 data = Encoding.ASCII.GetBytes(json);
@@ -239,32 +211,27 @@ namespace Tanks
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             Rectangle player = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self].Rectangle;
-            if (e.Key == Key.Left && noMoveLeft == false)
+            if (e.Key == Key.Left)
             {
                 moveLeft = true;
-                noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
                 player.RenderTransform = new RotateTransform(-90, player.Width / 2, player.Height / 2);
             }
-            if (e.Key == Key.Right && noMoveRight == false)
+            if (e.Key == Key.Right)
             {
                 moveRight = true;
-                noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
                 player.RenderTransform = new RotateTransform(90, player.Width / 2, player.Height / 2);
 
             }
-            if (e.Key == Key.Up && noMoveUp == false)
+            if (e.Key == Key.Up)
             {
                 moveUp = true;
-                noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
                 player.RenderTransform = new RotateTransform(0, player.Width / 2, player.Height / 2);
 
             }
-            if (e.Key == Key.Down && noMoveDown == false)
+            if (e.Key == Key.Down)
             {
                 moveDown = true;
-                noMoveLeft = noMoveRight = noMoveUp = noMoveDown = false;
                 player.RenderTransform = new RotateTransform(-180, player.Width / 2, player.Height / 2);
-
             }
         }
 

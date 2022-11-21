@@ -65,11 +65,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionController.cs" />
     <Compile Include="Artifact.cs" />
     <Compile Include="Bullet.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandMoveDown.cs" />
+    <Compile Include="CommandMoveUp.cs" />
+    <Compile Include="CommandMoveRight.cs" />
+    <Compile Include="CommandMoveLeft.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />
+    <Compile Include="NoCommand.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="PlayerAction.cs" />
     <Compile Include="Packet.cs" />
