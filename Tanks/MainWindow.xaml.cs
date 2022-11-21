@@ -151,7 +151,10 @@ namespace Tanks
             }
 
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
+            Tank tank2 = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
+
+            LivesText.Content = $"Gyvybės: {tank.lives}";
 
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
@@ -188,24 +191,28 @@ namespace Tanks
                         Canvas.SetLeft(player, Canvas.GetLeft(player) + 10);
                         noMoveLeft = true;
                         moveLeft = false;
+                        tank.lives -= 1;
                     }
                     if (moveRight == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
                         Canvas.SetLeft(player, Canvas.GetLeft(player) - 10);
                         noMoveRight = true;
                         moveRight = false;
+                        tank.lives -= 1;
                     }
                     if (moveDown == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
                         Canvas.SetTop(player, Canvas.GetTop(player) - 10);
                         noMoveDown = true;
                         moveDown = false;
+                        tank.lives -= 1;
                     }
                     if (moveUp == true && PlayerHitBox.IntersectsWith(wallHitBox))
                     {
                         Canvas.SetTop(player, Canvas.GetTop(player) + 10);
                         noMoveUp = true;
                         moveUp = false;
+                        tank.lives -= 1;
                     }
 
                 }
