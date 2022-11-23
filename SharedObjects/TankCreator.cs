@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class TankCreator : Creator
+    public class TankCreator //: Creator
     {
-        override
+        //override
         public Tank factoryMethod(string input, int x, int y, int width, int height)
         {
             if (input.Equals("H"))

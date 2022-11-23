@@ -20,7 +20,7 @@ namespace Server
         private Socket socket;
         private List<Player> players = new List<Player>();
         private DateTime previous;
-        private int bulletId = 0;
+        private int bulletCount = 0; // total bullets in a field
 
 
         public Server() : this(8888) { }
@@ -33,6 +33,17 @@ namespace Server
             socket.Bind(new IPEndPoint(IPAddress.Loopback, port));
 
             previous = DateTime.Now;
+        }
+
+        public void CreateBullet(List<Bullet> bullets, Tank t)
+        {
+            // create bullet
+            Bullet b = new Bullet(t.X, t.Y, t.Width / 3,
+                t.Height / 3, t.speed, bulletCount);
+            bulletCount++;
+
+            // and to list
+           bullets.Append(b);
         }
 
         public void Start()
@@ -55,6 +66,7 @@ namespace Server
                 string data = Encoding.ASCII.GetString(packet.Data);
                 try
                 {
+                    List<Bullet> bulletsList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
 
                     Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
@@ -73,7 +85,7 @@ namespace Server
                                 }
                                 else if(action.type == ActionType.shoot)
                                 {
-
+                                    CreateBullet(bulletsList, tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Left)
@@ -85,7 +97,7 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-
+                                    CreateBullet(bulletsList, tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Up)
@@ -97,7 +109,7 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-
+                                    CreateBullet(bulletsList, tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Down)
@@ -109,7 +121,7 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-
+                                    CreateBullet(bulletsList, tanks[i]);
                                 }
                             }
 
@@ -126,6 +138,8 @@ namespace Server
                             }
                         }
                     }
+
+                    GameSession.Instance.GameObjectContainer.Bullets = bulletsList.ToArray();
 
                     foreach (Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
                     {

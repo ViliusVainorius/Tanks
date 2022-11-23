@@ -8,6 +8,6 @@ namespace SharedObjects
 {
     public class NoCommand : Command
     {
-        public void execute() { }
+        public override void execute() { }
     }
 }

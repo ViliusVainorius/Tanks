@@ -18,22 +18,14 @@ namespace SharedObjects
             this.tank = tank;
         }
 
-        public void execute()
+        public override void execute()
         {
-            Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
             System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X - tank.speed, tank.Y, tank.Width, tank.Height);
             bool intersects = false;
-            Wall obstacle = null;
+            GameObject obstacle = null;
 
-            foreach (Wall wall in walls)
-            {
-                if(wall.Intersect(newPosition))
-                {
-                    obstacle = wall;
-                    intersects = true;
-                    break;
-                }
-            }
+            CheckCollisionWithWalls(newPosition, ref obstacle, ref intersects);
+            CheckCollisionWithEnemy(newPosition, ref obstacle, ref intersects);
 
             int x = -1;
 

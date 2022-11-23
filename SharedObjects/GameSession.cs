@@ -16,13 +16,14 @@ namespace SharedObjects
         public DateTime start_time {get; set;}
         public DateTime finish_time {get; set;}
         public Difficulty difficulty {get; set;}
+
         [XmlAttribute]
         public int lives;
         public int self;
         public GameObjectContainer GameObjectContainer;
         public static string xmlFileName;
         
-        private static GameSession instance;
+        private static GameSession instance = null;
 
         public static GameSession Instance
         {

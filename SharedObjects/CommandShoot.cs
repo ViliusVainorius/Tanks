@@ -15,10 +15,8 @@ namespace SharedObjects
             this.tank = tank;
         }
 
-        public void execute()
+        public override void execute()
         {
-
-
             Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
             System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X, tank.Y + tank.speed, tank.Width, tank.Height);
             bool intersects = false;

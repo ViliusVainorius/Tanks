@@ -40,12 +40,13 @@ namespace SharedObjects
                 }
             }
 
-            
+            // if no bullets exists, create them
             if (Bullets.Length == 0)
             {
                 Bullets = gameObjectContainer.Bullets;
                 remove = new Bullet[0];
             }
+            // go trough all bullets and check whether any of them is deleted (collided or else) 
             else
             {
                 List<Bullet> bullets = new List<Bullet>();
@@ -65,13 +66,13 @@ namespace SharedObjects
                             break;
                         }
                     }
-
+                    // deletes bullet if needed
                     if (!found)
                     {
                         remove.Add(Bullets[i]);
                     }
                 }
-
+                // check which of bullets are new and draws them
                 foreach(Bullet bullet in gameObjectContainer.Bullets)
                 {
                     bool found = false;
@@ -123,7 +124,7 @@ namespace SharedObjects
                         break;
                     case "Tank":
                         string temp = "Heavy";
-                        Creator ctr = new TankCreator();
+                        TankCreator ctr = new TankCreator();
                         Tank MyTank = ctr.factoryMethod("H", int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
 
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));

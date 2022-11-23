@@ -183,9 +183,10 @@ namespace Tanks
             }
 
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
-            Tank tank2 = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
+            // updting lives
+            LivesText.Content = "Gyvybės: " + tank.lives;
 
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
@@ -294,6 +295,10 @@ namespace Tanks
             {
                 moveDown = false;
             }
+            if (e.Key == Key.Space)
+            {
+                shoot = false;
+            }
 
             if (e.Key == Key.Enter && gameOver == true)
             {
@@ -311,13 +316,8 @@ namespace Tanks
             moveDown = false;
             gameOver = false;
 
-            LivesText.Content = "Gyvybės: 3";
             livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));
-
-
             MyCanvas.Background = Brushes.DarkGray;
         }
-
-
     }        
 }
