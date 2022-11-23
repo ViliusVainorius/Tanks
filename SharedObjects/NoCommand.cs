@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class NoCommand : Command
+    public class NoCommand : CommandMove
     {
-        public override void execute() { }
     }
 }

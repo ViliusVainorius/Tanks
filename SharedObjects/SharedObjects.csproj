@@ -70,7 +70,8 @@
     <Compile Include="BlueHeavyTank.cs" />
     <Compile Include="BlueLightTank.cs" />
     <Compile Include="Bullet.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="CommandCollide.cs" />
+    <Compile Include="CommandMove.cs" />
     <Compile Include="CommandMoveDown.cs" />
     <Compile Include="CommandMoveUp.cs" />
     <Compile Include="CommandMoveRight.cs" />

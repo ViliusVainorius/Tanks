@@ -8,14 +8,14 @@ namespace SharedObjects
 {
     public class ActionController
     {
-        Command slot;
+        CommandMove slot;
 
         public ActionController()
         {
             slot = new NoCommand();
         }
 
-        public void SetCommand(Command command)
+        public void SetCommand(CommandMove command)
         {
             slot = command;
         }

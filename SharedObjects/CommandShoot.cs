@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class CommandShoot : Command
+    public class CommandShoot : CommandCollide
     {
         Tank tank;
 
@@ -17,20 +17,12 @@ namespace SharedObjects
 
         public override void execute()
         {
-            Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
             System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X, tank.Y + tank.speed, tank.Width, tank.Height);
+            GameObject obstacle = null;
             bool intersects = false;
-            Wall obstacle = null;
 
-            foreach (Wall wall in walls)
-            {
-                if (wall.Intersect(newPosition))
-                {
-                    obstacle = wall;
-                    intersects = true;
-                    break;
-                }
-            }
+            CheckCollisionWithWalls(newPosition, ref obstacle, ref intersects);
+            CheckCollisionWithEnemy(newPosition, ref obstacle, ref intersects);
 
             int y = -1;
 

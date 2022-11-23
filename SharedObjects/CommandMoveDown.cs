@@ -9,7 +9,8 @@ using System.Windows.Shapes;
 
 namespace SharedObjects
 {
-    public class CommandMoveDown : Command
+    /// The 'Adapter' class
+    public class CommandMoveDown : CommandMove
     {
         Tank tank;
 
@@ -21,11 +22,14 @@ namespace SharedObjects
         public override void execute()
         {
             System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X, tank.Y + tank.speed, tank.Width, tank.Height);
-            bool intersects = false;
-            GameObject obstacle = null;
-
-            CheckCollisionWithWalls(newPosition, ref obstacle, ref intersects);
-            CheckCollisionWithEnemy(newPosition, ref obstacle, ref intersects);
+            
+            CommandCollide collisions = new CommandCollide();
+            GameObject obst = obstacle;
+            bool inter = intersects;
+            collisions.CheckCollisionWithWalls(newPosition, ref obst, ref inter);
+            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter);
+            obstacle = obst;
+            intersects = inter;
 
             int y = -1;
 

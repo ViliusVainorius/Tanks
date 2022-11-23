@@ -22,7 +22,6 @@ namespace Server
         private DateTime previous;
         private int bulletCount = 0; // total bullets in a field
 
-
         public Server() : this(8888) { }
 
         public Server(int port)
@@ -35,7 +34,7 @@ namespace Server
             previous = DateTime.Now;
         }
 
-        public void CreateBullet(List<Bullet> bullets, Tank t)
+        public void CreateBullet(ref List<Bullet> bullets, Tank t)
         {
             // create bullet
             Bullet b = new Bullet(t.X, t.Y, t.Width / 3,
@@ -85,7 +84,8 @@ namespace Server
                                 }
                                 else if(action.type == ActionType.shoot)
                                 {
-                                    CreateBullet(bulletsList, tanks[i]);
+                                    CreateBullet(ref bulletsList, tanks[i]);
+                                    //controller.SetCommand(new CommandShoot(tanks[i]));
                                 }
                             }
                             else if (action.side == FacingSide.Left)
@@ -97,7 +97,8 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-                                    CreateBullet(bulletsList, tanks[i]);
+                                    CreateBullet(ref bulletsList, tanks[i]);
+                                    //controller.SetCommand(new CommandShoot(tanks[i]));
                                 }
                             }
                             else if (action.side == FacingSide.Up)
@@ -109,7 +110,8 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-                                    CreateBullet(bulletsList, tanks[i]);
+                                    CreateBullet(ref bulletsList, tanks[i]);
+                                    //controller.SetCommand(new CommandShoot(tanks[i]));
                                 }
                             }
                             else if (action.side == FacingSide.Down)
@@ -121,7 +123,8 @@ namespace Server
                                 }
                                 else if (action.type == ActionType.shoot)
                                 {
-                                    CreateBullet(bulletsList, tanks[i]);
+                                    CreateBullet(ref bulletsList, tanks[i]);
+                                    //controller.SetCommand(new CommandShoot(tanks[i]));
                                 }
                             }
 

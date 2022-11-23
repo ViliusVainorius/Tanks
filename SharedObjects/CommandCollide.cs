@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public abstract class Command
+    /// The 'Adaptee' class
+    /// here we have methods, related to moving. It doesnt matter what kind of object moves
+    public class CommandCollide
     {
-        public abstract void execute();
+        public virtual void execute() { }
         public void CheckCollisionWithEnemy(System.Drawing.Rectangle newPosition, ref GameObject obstacle, ref bool intersects)
         {
             // get other player coordinates and check for collision with my tank
@@ -16,7 +18,7 @@ namespace SharedObjects
             int myTankIndex = GameSession.Instance.self;
             for (int i = 0; i < tanks.Length; i++)
             {
-                // if my tank then dont check for collisions
+                // if my tank, then dont check for collisions
                 if (myTankIndex == i)
                     continue;
 
