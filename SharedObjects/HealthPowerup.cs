@@ -27,7 +27,7 @@ namespace SharedObjects
             {
                 Width = this.Width,
                 Height = this.Height,
-                Fill = Brushes.Green,
+                Fill = Brushes.Red,
                 Stroke = Brushes.Orange,
                 StrokeThickness = 2,
                 Tag = "Powerup",

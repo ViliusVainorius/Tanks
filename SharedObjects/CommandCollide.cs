@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +17,17 @@ namespace SharedObjects
             // get other player coordinates and check for collision with my tank
             Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
             int myTankIndex = GameSession.Instance.self;
+
+            StreamWriter writer;
+            using (writer = new StreamWriter(@"C:\Users\vytau\Documents\KTU\7 pusmetis\Objektinis programų projektavimas\Temporary.txt"))
+            {
+                writer.WriteLine("Index: " + myTankIndex);
+            }
+
             for (int i = 0; i < tanks.Length; i++)
             {
                 // if my tank, then dont check for collisions
-                if (myTankIndex == i)
+                if (GameSession.Instance.self == i)
                     continue;
 
                 if (tanks[i].Intersect(newPosition))

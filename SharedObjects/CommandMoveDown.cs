@@ -14,7 +14,7 @@ namespace SharedObjects
     {
         Tank tank;
 
-        public CommandMoveDown(Tank tank)
+        public CommandMoveDown(Tank tank): base()
         {
             this.tank = tank;
         }
