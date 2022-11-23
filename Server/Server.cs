@@ -143,6 +143,7 @@ namespace Server
                     }
 
                     GameSession.Instance.GameObjectContainer.Bullets = bulletsList.ToArray();
+                    GameSession.Instance.GameObjectContainer.Tanks = tanks.ToArray();
 
                     foreach (Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
                     {

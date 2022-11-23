@@ -151,7 +151,7 @@ namespace SharedObjects
 
             // hardcoded powerup adding to map
             PowerupsMaker powerupsMaker = new PowerupsMaker();
-            powerups.Add(powerupsMaker.CreateTripleShootPowerup());
+            powerups.Add(powerupsMaker.CreateHealthPowerup());
             powerups.Add(powerupsMaker.CreateSpeedPowerup());
 
             Tanks = tanks.ToArray();

@@ -10,6 +10,7 @@ namespace SharedObjects
     {
         private Powerup tripleShootP;
         private Powerup speedP;
+        private Powerup healthP;
         private const int defaultVal = 100;
 
         // randomize location
@@ -30,6 +31,11 @@ namespace SharedObjects
         {
             tripleShootP = new TripleShotPowerup(defaultVal + 10, defaultVal + 10, defaultVal / 4 , defaultVal / 4);
             return (tripleShootP as TripleShotPowerup);
+        }
+        public HealthPowerup CreateHealthPowerup()
+        {
+            healthP = new HealthPowerup(defaultVal + 30, defaultVal + 30, defaultVal / 2, defaultVal / 2);
+            return (healthP as HealthPowerup);
         }
 
 
