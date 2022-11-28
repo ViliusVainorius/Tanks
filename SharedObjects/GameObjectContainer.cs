@@ -136,11 +136,13 @@ namespace SharedObjects
 
                         if (userInput.Equals("Heavy"))
                         {
-                            MyTank = unitFactory.createHeavyTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+                            MyTank = unitFactory.createHeavyTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), 
+                                int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
                         }
                         if (userInput.Equals("Light"))
                         {
-                            MyTank = unitFactory.createLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+                            MyTank = unitFactory.createLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")),
+                                int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
                         }
 
                         //playerImages[1].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
