@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public abstract class Creator
+    public abstract class Team
     {
-        public abstract Team factoryMethod(string userInput);
+        public abstract AbstractFactory getAbstractFactory();
     }
 }

@@ -124,8 +124,24 @@ namespace SharedObjects
                         break;
                     case "Tank":
                         string temp = "Heavy";
-                        TankCreator ctr = new TankCreator();
-                        Tank MyTank = ctr.factoryMethod("H", int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+                        Creator ctr = new TankCreator();
+                        Team MyTeam = ctr.factoryMethod("B"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
+                        
+                        AbstractFactory unitFactory = MyTeam.getAbstractFactory(); // initiliazing abstract factory
+
+                        Tank MyTank = null;
+                        string userInput = "Heavy"; // "Heavy - creates a heavy tank/ "Light" - creates a light tank"
+
+                        if (userInput.Equals("Heavy"))
+                        {
+                            MyTank = unitFactory.createHeavyTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+                        }
+                        if (userInput.Equals("Light"))
+                        {
+                            MyTank = unitFactory.createLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
+                        }
+
+
 
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
                         MyTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));

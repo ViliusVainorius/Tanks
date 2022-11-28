@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class BlueLightTank : Tank
+    public class RedLightTank : Tank
     {
         const int defaultspeed = 2;
-        public BlueLightTank(int x, int y, int width, int height) : base(x, y, width, height, defaultspeed)
+        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height, defaultspeed)
         {
             this.speed = speed + 3;
             this.lives = lives - 1;
