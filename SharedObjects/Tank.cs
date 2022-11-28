@@ -18,14 +18,16 @@ namespace SharedObjects
         public int lives;
         [XmlIgnore]
         public Player player;
+        public string skin;
         public int Rotation;
         public FacingSide side;
 
-        public Tank(int x, int y, int width, int height, int speed) : base(x, y, width, height) {
+        public Tank(int x, int y, int width, int height, int speed, string skin) : base(x, y, width, height) {
 
             this.hasTripleShoot = false;
             this.lives = 3;
             this.speed = speed;
+            this.skin = skin;
         }
 
         public override Rectangle GetNewRectangle()

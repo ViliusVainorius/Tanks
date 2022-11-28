@@ -92,8 +92,8 @@ namespace Tanks
                 playerImages[i] = new ImageBrush();
             }
 
-            playerImages[0].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankBlue.png"));
-            playerImages[1].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
+            playerImages[0].ImageSource = new BitmapImage(new Uri(tanks[0].skin));
+            playerImages[1].ImageSource = new BitmapImage(new Uri(tanks[1].skin));
 
             for (int i = 0; i < tanks.Length; i++)
             {

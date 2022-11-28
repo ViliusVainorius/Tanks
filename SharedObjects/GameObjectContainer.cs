@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -125,7 +127,7 @@ namespace SharedObjects
                     case "Tank":
                         string temp = "Heavy";
                         Creator ctr = new TankCreator();
-                        Team MyTeam = ctr.factoryMethod("B"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
+                        Team MyTeam = ctr.factoryMethod("R"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
                         
                         AbstractFactory unitFactory = MyTeam.getAbstractFactory(); // initiliazing abstract factory
 
@@ -140,6 +142,8 @@ namespace SharedObjects
                         {
                             MyTank = unitFactory.createLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
                         }
+
+                        //playerImages[1].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
 
 
 
