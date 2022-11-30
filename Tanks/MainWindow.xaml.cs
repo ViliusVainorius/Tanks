@@ -170,8 +170,9 @@ namespace Tanks
                             }
                             catch { }
 
-                            Canvas.SetLeft(bullet.Rectangle, bullet.Y);
-                            Canvas.SetTop(bullet.Rectangle, bullet.X);
+                            Canvas.SetLeft(bullet.Rectangle, bullet.X);
+                            Canvas.SetTop(bullet.Rectangle, bullet.Y);
+                            
                         }
 
                         foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.remove)
@@ -213,7 +214,7 @@ namespace Tanks
             }
             if (shoot == true)
             {
-                
+                Thread.Sleep(100);
                 action = new PlayerAction(ActionType.shoot, tank.side);
             }
 
@@ -314,6 +315,7 @@ namespace Tanks
             moveLeft = false;
             moveUp = false;
             moveDown = false;
+            shoot = false;
             gameOver = false;
 
             livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class CommandShoot : CommandCollide
+    public class CommandShoot : CommandMove
     {
         Tank tank;
         List<Bullet> bullets;
@@ -23,8 +23,8 @@ namespace SharedObjects
             // updting lives
 
             StreamWriter writer;
-            
-            using (writer = new StreamWriter(@"D:\temp.txt"))//writer = new StreamWriter(@"C:\Users\vytau\Documents\KTU\7 pusmetis\Objektinis programų projektavimas\Temporary2.txt")
+
+            /*using (writer = new StreamWriter(@"C:\Users\vytau\Documents\KTU\7 pusmetis\Objektinis programų projektavimas\Temporary2.txt"))
             {
                 int i = 0;
                 writer.WriteLine("Bullets count" + bullets.Count);
@@ -33,7 +33,7 @@ namespace SharedObjects
                     writer.WriteLine("Bullet " + i + ": " + b.X);
                     i++;
                 }
-            }
+            }*/
         }
     }
 }

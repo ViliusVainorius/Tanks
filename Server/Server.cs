@@ -37,13 +37,50 @@ namespace Server
         public void CreateBullet(ref List<Bullet> bullets, Tank t)
         {
             // create bullet
-            Bullet b = new Bullet(t.X, t.Y, t.Width / 3,
-                t.Height / 3, t.speed, bulletCount);
+            int x = t.X;
+            int y = t.Y;
+            int width = t.Width / 3;
+            int height = t.Height / 3;
+            
+            if (t.side == FacingSide.Left) 
+            {
+                x -= (t.Width) - width;
+                y += (t.Height / 2) - height / 2; 
+            }
+            else if (t.side == FacingSide.Right)
+            {
+                x += (t.Width) + width;
+                y += (t.Height / 2) - height / 2;
+            }
+            else if (t.side == FacingSide.Down)
+            {
+                y += (t.Height) + 1;
+                x += t.Width / 2 - width / 2; 
+            }
+            else if (t.side == FacingSide.Up)
+            {
+                y -= (height);
+                x += t.Width / 2 - width / 2;
+            }
+
+            Bullet b = new Bullet(x, y, width,
+                height, t.speed, bulletCount, t.side);
             bulletCount++;
 
             // and to list
            //bullets.Append(b);
             bullets.Add(b);
+        }
+        public void RemoveBullet(ref List<Bullet> bullets, Bullet bullet)
+        {
+            // move all bullets into removable bullet place
+            for (int i = bullet.bulletId; i < bullets.Count - 1; i++)
+            {
+                bullets[i] = bullets[i + 1];
+            }
+            // remove last bullet
+            bulletCount--;
+            bullets.Remove(bullets[bullets.Count - 1]);
         }
 
         public void Start()
@@ -67,6 +104,7 @@ namespace Server
                 try
                 {
                     List<Bullet> bulletsList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
+                    Wall [] walls = GameSession.Instance.GameObjectContainer.Walls;
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
 
                     Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
@@ -140,6 +178,48 @@ namespace Server
                                 powerups[j].PickUp(ref tanks[i]);
                                 powerups[j] = new UsedPowerup();
                             }
+                        }
+
+                        // check bullets collision with tanks
+                        Bullet[] bullets = GameSession.Instance.GameObjectContainer.Bullets;
+                        for (int j = 0; j < bullets.Length; j++)
+                        {
+                            if (bullets[j] != null )
+                            {
+                                if (tanks[i].Intersect(bullets[j]))
+                                {
+                                    tanks[i].lives --;
+                                    RemoveBullet(ref bulletsList, bullets[j]);
+                                }
+                            }
+                        }
+                    }
+
+                    // check for bullet collisions with walls
+                    for (int k = 0; k < walls.Length; k++)
+                    {
+                        for (int j = 0; j < bulletsList.Count; j++)
+                        {
+                            if (bulletsList[j] != null)
+                            {
+                                if (walls[k].Intersect(bulletsList[j]))
+                                {
+                                    RemoveBullet(ref bulletsList, bulletsList[j]);
+                                }
+                            }
+                        }
+                    }
+
+                    // move bullets
+                    foreach (Bullet bullet in bulletsList)
+                    {
+                        if (bullet != null)
+                        {
+                            int x = bullet.MoveX(bullet.side);
+                            int y = bullet.MoveY(bullet.side);
+
+                            bullet.X += x;
+                            bullet.Y += y;
                         }
                     }
 
