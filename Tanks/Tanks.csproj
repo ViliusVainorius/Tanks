@@ -140,6 +140,10 @@
     <Resource Include="images\tankRed.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Server\Server.csproj">
+      <Project>{A7F98B76-F022-4EC6-B53D-B2335462ED15}</Project>
+      <Name>Server</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedObjects\SharedObjects.csproj">
       <Project>{d1444d62-e906-49a2-a65d-55f99c31e79b}</Project>
       <Name>SharedObjects</Name>

@@ -22,6 +22,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Windows.Markup;
+using Server;
 
 namespace Tanks
 {
@@ -134,7 +135,7 @@ namespace Tanks
 
             Packet packet = Packet.ReceiveDataFrom(socket, new IPEndPoint(IPAddress.Loopback, 8888));
             Powerup[] powerups;
-            Bullet[] bullets = null;
+            List<Bullet> bullets = new List<Bullet>();
 
             if (packet != null)
             {
@@ -212,6 +213,7 @@ namespace Tanks
             }
             if (shoot == true)
             {
+                
                 action = new PlayerAction(ActionType.shoot, tank.side);
             }
 

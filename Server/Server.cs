@@ -42,7 +42,8 @@ namespace Server
             bulletCount++;
 
             // and to list
-           bullets.Append(b);
+           //bullets.Append(b);
+            bullets.Add(b);
         }
 
         public void Start()
