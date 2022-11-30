@@ -9,6 +9,7 @@ namespace SharedObjects
     public class ActionController
     {
         CommandMove slot;
+        CommandShoot slot_shoot;
 
         public ActionController()
         {
@@ -19,10 +20,17 @@ namespace SharedObjects
         {
             slot = command;
         }
+        public void SetCommand(CommandShoot command)
+        {
+            slot_shoot = command;
+        }
 
         public void Execute()
         {
-            slot.execute();
+            if (slot != null)
+                slot.execute();
+            if (slot_shoot != null)
+                slot_shoot.execute();
         }
     }
 }

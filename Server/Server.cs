@@ -85,7 +85,7 @@ namespace Server
                                 else if(action.type == ActionType.shoot)
                                 {
                                     CreateBullet(ref bulletsList, tanks[i]);
-                                    //controller.SetCommand(new CommandShoot(tanks[i]));
+                                    controller.SetCommand(new CommandShoot(tanks[i], bulletsList));
                                 }
                             }
                             else if (action.side == FacingSide.Left)

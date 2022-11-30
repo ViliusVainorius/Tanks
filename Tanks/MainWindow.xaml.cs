@@ -161,8 +161,7 @@ namespace Tanks
                                 MyCanvas.Children.Remove(powerup.Rectangle);
                             }
                         }
-
-                        foreach(Bullet bullet in GameSession.Instance.GameObjectContainer.Bullets)
+                        foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.Bullets)
                         {
                             try
                             {
@@ -185,8 +184,7 @@ namespace Tanks
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
-            // updting lives
-            LivesText.Content = "Gyvybės: " + tank.lives;
+            LivesText.Content = "Gyvybės: " + tank.speed;
 
             PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
