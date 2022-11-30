@@ -83,5 +83,11 @@ namespace SharedObjects
         {
             Easy, Medium, High
         }
+        public int GetPlayerIndex(Player player)
+        {
+            if (GameSession.Instance.GameObjectContainer.Tanks[0].player.EndPoint == player.EndPoint)
+                return 0;
+            return 1;
+        }
     }
 }

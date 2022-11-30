@@ -13,10 +13,12 @@ namespace SharedObjects
     public class CommandMoveRight : CommandMove
     {
         Tank tank;
+        Player player;
 
-        public CommandMoveRight(Tank tank) : base()
+        public CommandMoveRight(Tank tank, Player player = null) : base()
         {
             this.tank = tank;
+            this.player = player;
         }
 
         public override void execute()
@@ -26,7 +28,7 @@ namespace SharedObjects
             GameObject obst = obstacle;
             bool inter = intersects;
             collisions.CheckCollisionWithWalls(newPosition, ref obst, ref inter);
-            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter);
+            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, player);
             obstacle = obst;
             intersects = inter;
 

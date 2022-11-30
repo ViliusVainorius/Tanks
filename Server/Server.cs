@@ -79,7 +79,7 @@ namespace Server
                             {
                                 if (action.type == ActionType.move)
                                 {
-                                    controller.SetCommand(new CommandMoveRight(tanks[i]));
+                                    controller.SetCommand(new CommandMoveRight(tanks[i], player));
                                     tanks[i].Rotation = 90;
                                 }
                                 else if(action.type == ActionType.shoot)
@@ -92,7 +92,7 @@ namespace Server
                             {
                                 if (action.type == ActionType.move)
                                 {
-                                    controller.SetCommand(new CommandMoveLeft(tanks[i]));
+                                    controller.SetCommand(new CommandMoveLeft(tanks[i], player));
                                     tanks[i].Rotation = -90;
                                 }
                                 else if (action.type == ActionType.shoot)
@@ -105,7 +105,7 @@ namespace Server
                             {
                                 if (action.type == ActionType.move)
                                 {
-                                    controller.SetCommand(new CommandMoveUp(tanks[i]));
+                                    controller.SetCommand(new CommandMoveUp(tanks[i], player));
                                     tanks[i].Rotation = 0;
                                 }
                                 else if (action.type == ActionType.shoot)
@@ -118,7 +118,7 @@ namespace Server
                             {
                                 if (action.type == ActionType.move)
                                 {
-                                    controller.SetCommand(new CommandMoveDown(tanks[i]));
+                                    controller.SetCommand(new CommandMoveDown(tanks[i], player));
                                     tanks[i].Rotation = -180;
                                 }
                                 else if (action.type == ActionType.shoot)

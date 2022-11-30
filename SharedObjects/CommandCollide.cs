@@ -12,29 +12,20 @@ namespace SharedObjects
     public class CommandCollide
     {
         public virtual void execute() { }
-        public void CheckCollisionWithEnemy(System.Drawing.Rectangle newPosition, ref GameObject obstacle, ref bool intersects)
+        public void CheckCollisionWithEnemy(System.Drawing.Rectangle newPosition,
+            ref GameObject obstacle, ref bool intersects, Player player = null)
         {
             // get other player coordinates and check for collision with my tank
             Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
-            int myTankIndex = GameSession.Instance.self;
-
-            StreamWriter writer;
-            using (writer = new StreamWriter(@"C:\Users\vytau\Documents\KTU\7 pusmetis\Objektinis programų projektavimas\Temporary.txt"))
+            if (player != null)
             {
-                writer.WriteLine("Index: " + myTankIndex);
-            }
+                int myTankIndex = GameSession.Instance.GetPlayerIndex(player);
+                int enemyTankIndex = myTankIndex == 0 ? 1 : 0; // enemy index is opposite to 'my' index
 
-            for (int i = 0; i < tanks.Length; i++)
-            {
-                // if my tank, then dont check for collisions
-                if (GameSession.Instance.self == i)
-                    continue;
-
-                if (tanks[i].Intersect(newPosition))
+                if (tanks[enemyTankIndex].Intersect(newPosition))
                 {
-                    obstacle = tanks[i];
+                    obstacle = tanks[enemyTankIndex];
                     intersects = true;
-                    break;
                 }
             }
         }
