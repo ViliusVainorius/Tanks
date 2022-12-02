@@ -10,7 +10,7 @@ namespace SharedObjects
 {
     public class UsedPowerup : Powerup
     {
-        public Rectangle _rectangle;
+        public Rectangle rectangle;
         public UsedPowerup() : base(0, 0, 0, 0)
         {
 
@@ -23,7 +23,7 @@ namespace SharedObjects
 
         public override Rectangle GetNewRectangle()
         {
-            return _rectangle;
+            return rectangle;
         }
     }
 }

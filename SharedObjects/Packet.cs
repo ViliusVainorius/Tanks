@@ -31,17 +31,17 @@ namespace SharedObjects
         {
             byte[] data = new byte[PacketSize];
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-            EndPoint Remote = (EndPoint)(sender);
+            EndPoint remote = (sender);
             try
             {
-                int recv = socket.ReceiveFrom(data, ref Remote);
+                int recv = socket.ReceiveFrom(data, ref remote);
             }
             catch
             {
                 return null;
             }
 
-            if (Remote == (EndPoint)sender)
+            if (Equals(remote, sender))
                 return null;
 
             for(int i = 0; i < PacketSize; i++)
@@ -55,7 +55,7 @@ namespace SharedObjects
                 }
             }
 
-            return new Packet(Remote, data);
+            return new Packet(remote, data);
         }
 
         public static Packet ReceiveDataFrom(Socket socket, EndPoint endpoint)

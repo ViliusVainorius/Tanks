@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharedObjects
+﻿namespace SharedObjects
 {
     public class ActionController
     {
-        CommandMove slot;
+        CommandMove _slot;
 
         public ActionController()
         {
-            slot = new NoCommand();
+            _slot = new NoCommand();
         }
 
         public void SetCommand(CommandMove command)
         {
-            slot = command;
+            _slot = command;
         }
 
         public void Execute()
         { 
-            slot.execute();
+            _slot.Execute();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SharedObjects
 {
     public abstract class GameObject
     {
-        Rectangle rect;
+        Rectangle _rect;
         [XmlAttribute]
         public int X { get; set; }
         [XmlAttribute]
@@ -20,7 +20,7 @@ namespace SharedObjects
         public int Width { get; set; }
         [XmlAttribute]
         public int Height { get; set; }
-        public int CanvasID { get; set; }
+        public int CanvasId { get; set; }
 
         protected GameObject() { }
 
@@ -32,8 +32,8 @@ namespace SharedObjects
             Height = height;
         }
 
-        public abstract void draw();
-        public abstract void getDimensions();
+        public abstract void Draw();
+        public abstract void GetDimensions();
         public abstract Rectangle GetNewRectangle();
 
         public bool Intersect(GameObject other)
@@ -51,17 +51,6 @@ namespace SharedObjects
             return selfRect.IntersectsWith(other);
         }
 
-        public Rectangle Rectangle
-        {
-            get
-            {
-                if (rect == null)
-                {
-                    rect = GetNewRectangle();
-                }
-
-                return rect;
-            }
-        }
+        public Rectangle Rectangle => _rect ?? (_rect = GetNewRectangle());
     }
 }

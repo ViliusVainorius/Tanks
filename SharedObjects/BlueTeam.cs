@@ -8,8 +8,7 @@ namespace SharedObjects
 {
     public class BlueTeam : Team
     {
-        
-        override public AbstractFactory getAbstractFactory()
+        public override AbstractFactory GetAbstractFactory()
         {
             return new BlueFactory();
         }

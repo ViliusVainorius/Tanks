@@ -4,11 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Xml;
 using SharedObjects;
-using System.ComponentModel;
 using Newtonsoft.Json;
 using System.IO;
 using System.Xml.Serialization;
@@ -17,21 +13,21 @@ namespace Server
 {
     public class Server
     {
-        private Socket socket;
-        private List<Player> players = new List<Player>();
-        private DateTime previous;
-        private int bulletCount = 0; // total bullets in a field
+        private Socket _socket;
+        private List<Player> _players = new List<Player>();
+        private DateTime _previous;
+        private int _bulletCount = 0; // total bullets in a field
 
         public Server() : this(8888) { }
 
         public Server(int port)
         {
             Console.WriteLine("Starting server on port {0}!", port);
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket.Blocking = false;
-            socket.Bind(new IPEndPoint(IPAddress.Loopback, port));
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            _socket.Blocking = false;
+            _socket.Bind(new IPEndPoint(IPAddress.Loopback, port));
 
-            previous = DateTime.Now;
+            _previous = DateTime.Now;
         }
 
         public void CreateBullet(ref List<Bullet> bullets, Tank t)
@@ -64,8 +60,8 @@ namespace Server
             }
 
             Bullet b = new Bullet(x, y, width,
-                height, t.speed, bulletCount, t.side);
-            bulletCount++;
+                height, t.speed, _bulletCount, t.side);
+            _bulletCount++;
 
             // and to list
            //bullets.Append(b);
@@ -79,7 +75,7 @@ namespace Server
                 bullets[i] = bullets[i + 1];
             }
             // remove last bullet
-            bulletCount--;
+            _bulletCount--;
             bullets.Remove(bullets[bullets.Count - 1]);
         }
 
@@ -92,7 +88,7 @@ namespace Server
                 KeepAlive();
                 TryStartGame();
 
-                Packet packet = Packet.ReceiveData(socket);
+                Packet packet = Packet.ReceiveData(_socket);
                 Player player = GetPlayer(packet);
 
                 if(packet == null)
@@ -107,7 +103,7 @@ namespace Server
                     Wall [] walls = GameSession.Instance.GameObjectContainer.Walls;
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
 
-                    Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
+                    Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks; 
                     for(int i = 0; i < tanks.Length; i++)
                     {
                         if(tanks[i].player.EndPoint == player.EndPoint)
@@ -116,12 +112,12 @@ namespace Server
 
                             if (action.side == FacingSide.Right)
                             {
-                                if (action.type == ActionType.move)
+                                if (action.type == ActionType.Move)
                                 {
                                     controller.SetCommand(new CommandMoveRight(tanks[i], player));
                                     tanks[i].Rotation = 90;
                                 }
-                                else if(action.type == ActionType.shoot)
+                                else if(action.type == ActionType.Shoot)
                                 {
                                     CreateBullet(ref bulletsList, tanks[i]);
                                     controller.SetCommand(new CommandShoot(tanks[i], bulletsList));
@@ -129,12 +125,12 @@ namespace Server
                             }
                             else if (action.side == FacingSide.Left)
                             {
-                                if (action.type == ActionType.move)
+                                if (action.type == ActionType.Move)
                                 {
                                     controller.SetCommand(new CommandMoveLeft(tanks[i], player));
                                     tanks[i].Rotation = -90;
                                 }
-                                else if (action.type == ActionType.shoot)
+                                else if (action.type == ActionType.Shoot)
                                 {
                                     CreateBullet(ref bulletsList, tanks[i]);
                                     //controller.SetCommand(new CommandShoot(tanks[i]));
@@ -142,12 +138,12 @@ namespace Server
                             }
                             else if (action.side == FacingSide.Up)
                             {
-                                if (action.type == ActionType.move)
+                                if (action.type == ActionType.Move)
                                 {
                                     controller.SetCommand(new CommandMoveUp(tanks[i], player));
                                     tanks[i].Rotation = 0;
                                 }
-                                else if (action.type == ActionType.shoot)
+                                else if (action.type == ActionType.Shoot)
                                 {
                                     CreateBullet(ref bulletsList, tanks[i]);
                                     //controller.SetCommand(new CommandShoot(tanks[i]));
@@ -155,12 +151,12 @@ namespace Server
                             }
                             else if (action.side == FacingSide.Down)
                             {
-                                if (action.type == ActionType.move)
+                                if (action.type == ActionType.Move)
                                 {
                                     controller.SetCommand(new CommandMoveDown(tanks[i], player));
                                     tanks[i].Rotation = -180;
                                 }
-                                else if (action.type == ActionType.shoot)
+                                else if (action.type == ActionType.Shoot)
                                 {
                                     CreateBullet(ref bulletsList, tanks[i]);
                                     //controller.SetCommand(new CommandShoot(tanks[i]));
@@ -182,27 +178,27 @@ namespace Server
 
                         // check bullets collision with tanks
                         Bullet[] bullets = GameSession.Instance.GameObjectContainer.Bullets;
-                        for (int j = 0; j < bullets.Length; j++)
+                        foreach (var bullet in bullets)
                         {
-                            if (bullets[j] != null )
+                            if (bullet != null )
                             {
-                                if (tanks[i].Intersect(bullets[j]))
+                                if (tanks[i].Intersect(bullet))
                                 {
                                     tanks[i].lives --;
-                                    RemoveBullet(ref bulletsList, bullets[j]);
+                                    RemoveBullet(ref bulletsList, bullet);
                                 }
                             }
                         }
                     }
 
                     // check for bullet collisions with walls
-                    for (int k = 0; k < walls.Length; k++)
+                    foreach (var wall in walls)
                     {
                         for (int j = 0; j < bulletsList.Count; j++)
                         {
                             if (bulletsList[j] != null)
                             {
-                                if (walls[k].Intersect(bulletsList[j]))
+                                if (wall.Intersect(bulletsList[j]))
                                 {
                                     RemoveBullet(ref bulletsList, bulletsList[j]);
                                 }
@@ -233,7 +229,7 @@ namespace Server
                         {
                             ser.Serialize(ms, GameSession.Instance.GameObjectContainer);
                             packet = new Packet(tank.player.EndPoint, ms.ToArray());
-                            packet.SendToEndPoint(socket);
+                            packet.SendToEndPoint(_socket);
                         }
                     }
                 }
@@ -243,14 +239,14 @@ namespace Server
 
         private void TryStartGame()
         {
-            if(players.Count >= 2)
+            if(_players.Count >= 2)
             {
                 int player1 = -1;
                 int player2 = -1;
 
-                for (int i = 0; i < players.Count; i++)
+                for (int i = 0; i < _players.Count; i++)
                 {
-                    if(!players[i].isInGame)
+                    if(!_players[i].isInGame)
                     {
                         if(player1 == -1)
                         {
@@ -270,30 +266,29 @@ namespace Server
 
                 GameSession.xmlFileName = "..\\..\\..\\SharedObjects\\Maps\\Map1.xml";
 
-                Player player;
+                Player player = _players[player1];
                 StartGamePacket startGamePacket = new StartGamePacket("..\\..\\..\\SharedObjects\\Maps\\Map1.xml", 0);
                 
-                player = players[player1];
                 GameSession.Instance.GameObjectContainer.Tanks[0].player = player;
                 XmlSerializer ser = new XmlSerializer(typeof(StartGamePacket));
                 using(MemoryStream ms = new MemoryStream())
                 {
                     ser.Serialize(ms, startGamePacket);
                     Packet packet = new Packet(player.EndPoint, ms.ToArray());
-                    packet.SendToEndPoint(socket);
+                    packet.SendToEndPoint(_socket);
                 }
-                players[player1].isInGame = true;
+                _players[player1].isInGame = true;
 
                 startGamePacket.self = 1;
-                player = players[player2];
+                player = _players[player2];
                 GameSession.Instance.GameObjectContainer.Tanks[1].player = player;
                 using (MemoryStream ms = new MemoryStream())
                 {
                     ser.Serialize(ms, startGamePacket);
                     Packet packet = new Packet(player.EndPoint, ms.ToArray());
-                    packet.SendToEndPoint(socket);
+                    packet.SendToEndPoint(_socket);
                 }
-                players[player2].isInGame = true;
+                _players[player2].isInGame = true;
             }
         }
 
@@ -308,7 +303,7 @@ namespace Server
             if (player == null)
             {
                 player = new Player(packet.Endpoint);
-                players.Add(player);
+                _players.Add(player);
                 Console.WriteLine("Player at endpoint {0} added!", player.EndPoint);
             }
 
@@ -319,7 +314,7 @@ namespace Server
 
         private Player FindPlayer(EndPoint endPoint)
         {
-            foreach(Player player in players)
+            foreach(Player player in _players)
             {
                 if (player.EndPoint.ToString() == endPoint.ToString())
                     return player;
@@ -330,7 +325,7 @@ namespace Server
 
         private void KeepAlive()
         {
-            TimeSpan span = DateTime.Now - previous;
+            TimeSpan span = DateTime.Now - _previous;
 
             if(span.Minutes < 1)
             {
@@ -339,19 +334,19 @@ namespace Server
 
             List<int> playerId = new List<int>();
 
-            for(int i = 0; i < players.Count; i++)
+            for(int i = 0; i < _players.Count; i++)
             {
-                if(!players[i].IsAlive())
+                if(!_players[i].IsAlive())
                     playerId.Add(i);
             }
 
             for(int i = playerId.Count - 1; i >= 0; i--)
             {
-                Console.WriteLine("Player at endpoint {0} removed!", players[playerId[i]].EndPoint.ToString());
-                players.RemoveAt(playerId[i]);
+                Console.WriteLine("Player at endpoint {0} removed!", _players[playerId[i]].EndPoint);
+                _players.RemoveAt(playerId[i]);
             }
 
-            previous = DateTime.Now;
+            _previous = DateTime.Now;
         }
     }
 }

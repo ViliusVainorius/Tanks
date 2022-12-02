@@ -17,12 +17,12 @@ namespace SharedObjects
 
         }
 
-        public override void draw()
+        public override void Draw()
         {
             throw new NotImplementedException();
         }
 
-        public override void getDimensions()
+        public override void GetDimensions()
         {
             throw new NotImplementedException();
         }

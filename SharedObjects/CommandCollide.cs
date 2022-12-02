@@ -11,7 +11,6 @@ namespace SharedObjects
     /// here we have methods, related to moving. It doesnt matter what kind of object moves
     public class CommandCollide
     {
-        public virtual void execute() { }
         public void CheckCollisionWithEnemy(System.Drawing.Rectangle newPosition,
             ref GameObject obstacle, ref bool intersects, Player player = null)
         {

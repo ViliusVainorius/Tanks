@@ -18,7 +18,7 @@ namespace SharedObjects
         public int lives;
         [XmlIgnore]
         public Player player;
-        public string skin;
+        public string Skin;
         public int Rotation;
         public FacingSide side;
 
@@ -27,7 +27,7 @@ namespace SharedObjects
             this.hasTripleShoot = false;
             this.lives = 3;
             this.speed = speed;
-            this.skin = skin;
+            this.Skin = skin;
         }
 
         public override Rectangle GetNewRectangle()
@@ -45,31 +45,19 @@ namespace SharedObjects
             return rec;
         }
 
-        public override void draw()
+        public override void Draw()
         {
             throw new NotImplementedException();
         }
 
-        public override void getDimensions()
+        public override void GetDimensions()
         {
             throw new NotImplementedException();
         }
 
-        public int getLives()
+        public void Shoot()
         {
-            return this.lives;
-        }
-
-        public void shoot()
-        {
-            if (hasTripleShoot)
-            { 
-                Console.WriteLine("triple shoot!");
-            }
-            else
-            {
-                Console.WriteLine("simple shoot!");
-            }
+            Console.WriteLine(hasTripleShoot ? "triple shoot!" : "simple shoot!");
         }
         /*public void PickPowerup(Powerup p)
         {

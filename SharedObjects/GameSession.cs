@@ -13,9 +13,9 @@ namespace SharedObjects
 {
     public class GameSession
     {
-        public DateTime start_time {get; set;}
-        public DateTime finish_time {get; set;}
-        public Difficulty difficulty {get; set;}
+        public DateTime StartTime {get; set;}
+        public DateTime FinishTime {get; set;}
+        public DifficultyEnum Difficulty {get; set;}
 
         [XmlAttribute]
         public int lives;
@@ -23,23 +23,13 @@ namespace SharedObjects
         public GameObjectContainer GameObjectContainer;
         public static string xmlFileName;
         
-        private static GameSession instance = null;
+        private static GameSession _instance;
 
-        public static GameSession Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = DeserializeGameSession();
-                }
-                return instance;
-            }
-        }
+        public static GameSession Instance => _instance ?? (_instance = DeserializeGameSession());
 
         private GameSession()
         {
-            start_time = DateTime.Now;
+            StartTime = DateTime.Now;
         }
 
         private static GameSession DeserializeGameSession()
@@ -69,17 +59,12 @@ namespace SharedObjects
             }
         }
 
-        public void GenerateMap()
-        {
-            //throw new NotImplementedException();
-        }
-
         // this method will be called when game is over (one player looses or wins)
         public void FinishGame()
         {
-            finish_time = DateTime.Now;
+            FinishTime = DateTime.Now;
         }
-        public enum Difficulty
+        public enum DifficultyEnum
         {
             Easy, Medium, High
         }

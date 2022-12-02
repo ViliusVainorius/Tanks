@@ -8,9 +8,9 @@ namespace SharedObjects
 {
     public class RedLightTank : Tank
     {
-        const int defaultspeed = 2;
-        const string skin = "pack://application:,,,/images/tankRed.png";
-        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height, defaultspeed, skin)
+        const int DefaultSpeed = 2;
+        new const string Skin = "pack://application:,,,/images/tankRed.png";
+        public RedLightTank(int x, int y, int width, int height) : base(x, y, width, height, DefaultSpeed, Skin)
         {
             this.speed = speed + 3;
             this.lives = lives - 1;

@@ -12,24 +12,24 @@ namespace SharedObjects
     {
         public EndPoint EndPoint;
         public DateTime LastKeepAlive;
-        private int KeepAliveMinutes;
+        private int _keepAliveMinutes;
         public bool isInGame;
 
-        public Player(EndPoint EndPoint) : this(EndPoint, 1)
+        public Player(EndPoint endPoint) : this(endPoint, 1)
         {
         }
 
-        public Player(EndPoint endPoint, int KeepAliveMinutes)
+        public Player(EndPoint endPoint, int keepAliveMinutes)
         {
             this.EndPoint = endPoint;
             this.LastKeepAlive = DateTime.Now;
-            this.KeepAliveMinutes = KeepAliveMinutes;
+            this._keepAliveMinutes = keepAliveMinutes;
             this.isInGame = false;
         }
 
         public bool IsAlive()
         {
-            return !((DateTime.Now - LastKeepAlive).Minutes >= KeepAliveMinutes);
+            return !((DateTime.Now - LastKeepAlive).Minutes >= _keepAliveMinutes);
         }
     }
 }

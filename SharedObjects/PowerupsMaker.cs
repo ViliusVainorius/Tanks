@@ -8,34 +8,30 @@ namespace SharedObjects
 {
     public class PowerupsMaker
     {
-        private Powerup tripleShootP;
-        private Powerup speedP;
-        private Powerup healthP;
-        private const int defaultVal = 100;
+        private Powerup _tripleShootP;
+        private Powerup _speedP;
+        private Powerup _healthP;
+        private const int DefaultVal = 100;
 
         // randomize location
-        Random random = new Random();
+        Random _random = new Random();
             
-        public PowerupsMaker()
-        {
-        }
-
         public SpeedPowerup CreateSpeedPowerup()
         {
-            int x = random.Next(5);
-            int y = random.Next(5);
-            speedP = new SpeedPowerup(defaultVal, defaultVal, defaultVal / 2, defaultVal / 2);
-            return (speedP as SpeedPowerup);
+            int x = _random.Next(5);
+            int y = _random.Next(5);
+            _speedP = new SpeedPowerup(DefaultVal, DefaultVal, DefaultVal / 2, DefaultVal / 2);
+            return (_speedP as SpeedPowerup);
         }
         public TripleShotPowerup CreateTripleShootPowerup()
         {
-            tripleShootP = new TripleShotPowerup(defaultVal + 10, defaultVal + 10, defaultVal / 4 , defaultVal / 4);
-            return (tripleShootP as TripleShotPowerup);
+            _tripleShootP = new TripleShotPowerup(DefaultVal + 10, DefaultVal + 10, DefaultVal / 4 , DefaultVal / 4);
+            return (_tripleShootP as TripleShotPowerup);
         }
         public HealthPowerup CreateHealthPowerup()
         {
-            healthP = new HealthPowerup(defaultVal + 30, defaultVal + 30, defaultVal / 2, defaultVal / 2);
-            return (healthP as HealthPowerup);
+            _healthP = new HealthPowerup(DefaultVal + 30, DefaultVal + 30, DefaultVal / 2, DefaultVal / 2);
+            return (_healthP as HealthPowerup);
         }
 
 

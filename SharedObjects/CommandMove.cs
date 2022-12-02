@@ -9,16 +9,16 @@ namespace SharedObjects
     /// The 'Target' class
     public class CommandMove
     {
-        public bool intersects { get; set; }
-        public GameObject obstacle { get;set;}
+        public bool Intersects { get; set; }
+        public GameObject Obstacle { get;set;}
 
         public CommandMove()
         {
-            intersects = false;
-            obstacle = null;
+            Intersects = false;
+            Obstacle = null;
         }
 
-        public virtual void execute() { }
+        public virtual void Execute() { }
 
     }
 }

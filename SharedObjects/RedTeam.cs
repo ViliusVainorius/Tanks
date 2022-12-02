@@ -9,7 +9,7 @@ namespace SharedObjects
     public class RedTeam : Team
     {
         override
-            public AbstractFactory getAbstractFactory()
+            public AbstractFactory GetAbstractFactory()
         {
             return new RedFactory();
         }

@@ -9,7 +9,7 @@ namespace SharedObjects
     public class TankCreator : Creator
     {
         override
-        public Team factoryMethod(string input)
+        public Team FactoryMethod(string input)
         {
             if (input.Equals("R"))
                 return new RedTeam();

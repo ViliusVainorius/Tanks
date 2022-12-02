@@ -11,15 +11,14 @@ namespace SharedObjects
         public string fileName;
         public int self;
 
+        public StartGamePacket()
+        {
+        }
+
         public StartGamePacket(string fileName, int self)
         {
             this.fileName = fileName;
             this.self = self;
-        }
-
-        public StartGamePacket()
-        {
-
         }
     }
 }

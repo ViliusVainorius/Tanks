@@ -8,6 +8,6 @@ namespace SharedObjects
 {
     public abstract class Creator
     {
-        public abstract Team factoryMethod(string userInput);
+        public abstract Team FactoryMethod(string userInput);
     }
 }

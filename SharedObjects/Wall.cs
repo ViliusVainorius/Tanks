@@ -13,12 +13,12 @@ namespace SharedObjects
     {
         public Wall(int x, int y, int width, int height) : base(x, y, width, height) { }
 
-        public override void draw()
+        public override void Draw()
         {
             throw new NotImplementedException();
         }
 
-        public override void getDimensions()
+        public override void GetDimensions()
         {
             throw new NotImplementedException();
         }

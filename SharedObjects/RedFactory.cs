@@ -9,13 +9,13 @@ namespace SharedObjects
     public class RedFactory : AbstractFactory
     {
         override
-            public Tank createHeavyTank(int x, int y, int width, int height)
+            public Tank CreateHeavyTank(int x, int y, int width, int height)
         {
             return new RedHeavyTank(x, y, width, height);
         }
 
         override
-            public Tank createLightTank(int x, int y, int width, int height)
+            public Tank CreateLightTank(int x, int y, int width, int height)
         {
             return new RedLightTank(x, y, width, height);
         }

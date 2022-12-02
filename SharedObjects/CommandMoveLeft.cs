@@ -12,40 +12,40 @@ namespace SharedObjects
     /// The 'Adapter' class
     public class CommandMoveLeft: CommandMove
     {
-        Tank tank;
-        Player player;
+        Tank _tank;
+        Player _player;
 
-        public CommandMoveLeft(Tank tank, Player player = null) : base()
+        public CommandMoveLeft(Tank tank, Player player = null)
         {
-            this.tank = tank;
-            this.player = player;
+            this._tank = tank;
+            this._player = player;
         }
 
-        public override void execute()
+        public override void Execute()
         {
-            System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X - tank.speed, tank.Y, tank.Width, tank.Height);
+            System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(_tank.X - _tank.speed, _tank.Y, _tank.Width, _tank.Height);
 
             CommandCollide collisions = new CommandCollide();
-            GameObject obst = obstacle;
-            bool inter = intersects;
+            GameObject obst = Obstacle;
+            bool inter = Intersects;
             collisions.CheckCollisionWithWalls(newPosition, ref obst, ref inter);
-            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, player);
-            obstacle = obst;
-            intersects = inter;
+            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, _player);
+            Obstacle = obst;
+            Intersects = inter;
 
-            int x = -1;
+            int x;
 
-            if (intersects)
+            if (Intersects)
             {
-                x = obstacle.X + obstacle.Width;
+                x = Obstacle.X + Obstacle.Width;
             }
             else
             {
-                x = tank.X - tank.speed;
+                x = _tank.X - _tank.speed;
             }
 
-            tank.X = x;
-            tank.side = FacingSide.Left;
+            _tank.X = x;
+            _tank.side = FacingSide.Left;
         }
     }
 }

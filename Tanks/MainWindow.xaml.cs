@@ -4,15 +4,11 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using SharedObjects;
@@ -31,30 +27,28 @@ namespace Tanks
     /// </summary>
     public partial class MainWindow : Window
     {
-        Socket socket;
+        Socket _socket;
 
-        DispatcherTimer gameTimer = new DispatcherTimer();
+        DispatcherTimer _gameTimer = new DispatcherTimer();
 
-        ImageBrush livesImage = new ImageBrush();
-        Rect PlayerHitBox;
+        ImageBrush _livesImage = new ImageBrush();
+        Rect _playerHitBox;
 
-        Rect playerHitBoxObject;
+        Rect _playerHitBoxObject;
 
-        DateTime previous;
+        DateTime _previous;
 
-        bool moveLeft, moveRight, moveUp, moveDown, gameOver, shoot;
+        bool _moveLeft, _moveRight, _moveUp, _moveDown, _gameOver, _shoot;
 
         public MainWindow()
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket.Blocking = false;
-            socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            _socket.Blocking = false;
+            _socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
 
-            Packet packet;
-
-            packet = new Packet(new byte[0]);
-            packet.SendData(socket);
-            previous = DateTime.Now;
+            Packet packet = new Packet(new byte[0]);
+            packet.SendData(_socket);
+            _previous = DateTime.Now;
 
             InitializeComponent();
 
@@ -62,7 +56,7 @@ namespace Tanks
 
             while(true)
             {
-                packet = Packet.ReceiveData(socket);
+                packet = Packet.ReceiveData(_socket);
                 if (packet == null)
                 {
                     Thread.Sleep(100);
@@ -93,48 +87,46 @@ namespace Tanks
                 playerImages[i] = new ImageBrush();
             }
 
-            playerImages[0].ImageSource = new BitmapImage(new Uri(tanks[0].skin));
-            playerImages[1].ImageSource = new BitmapImage(new Uri(tanks[1].skin));
+            playerImages[0].ImageSource = new BitmapImage(new Uri(tanks[0].Skin));
+            playerImages[1].ImageSource = new BitmapImage(new Uri(tanks[1].Skin));
 
             for (int i = 0; i < tanks.Length; i++)
             {
-                tanks[i].CanvasID = MyCanvas.Children.Add(tanks[i].Rectangle);
+                tanks[i].CanvasId = MyCanvas.Children.Add(tanks[i].Rectangle);
                 Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
                 Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
                 tanks[i].Rectangle.Fill = playerImages[i];
             }
 
             Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
-            for(int i = 0; i < walls.Length; i++)
+            foreach (var w in walls)
             {
-                Rectangle wall = walls[i].Rectangle;
-                walls[i].CanvasID = MyCanvas.Children.Add(wall);
-                Canvas.SetLeft(wall, walls[i].X);
-                Canvas.SetTop(wall, walls[i].Y);
+                Rectangle wall = w.Rectangle;
+                w.CanvasId = MyCanvas.Children.Add(wall);
+                Canvas.SetLeft(wall, w.X);
+                Canvas.SetTop(wall, w.Y);
             }
 
             Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
             for (int i = 0; i < powerups.Length; i++)
             {
                 Rectangle powerup = powerups[i].Rectangle;
-                walls[i].CanvasID = MyCanvas.Children.Add(powerup);
+                walls[i].CanvasId = MyCanvas.Children.Add(powerup);
                 Canvas.SetLeft(powerup, powerups[i].X);
                 Canvas.SetTop(powerup, powerups[i].Y);
             }
 
-            gameTimer.Tick += GameLoop;
-            gameTimer.Interval = TimeSpan.FromMilliseconds(20);
+            _gameTimer.Tick += GameLoop;
+            _gameTimer.Interval = TimeSpan.FromMilliseconds(20);
 
             StartGame();
         }
 
         private void GameLoop(object sender, EventArgs e)
         {
-            byte[] data;
             PlayerAction action = null;
 
-            Packet packet = Packet.ReceiveDataFrom(socket, new IPEndPoint(IPAddress.Loopback, 8888));
-            Powerup[] powerups;
+            Packet packet = Packet.ReceiveDataFrom(_socket, new IPEndPoint(IPAddress.Loopback, 8888));
             List<Bullet> bullets = new List<Bullet>();
 
             if (packet != null)
@@ -188,34 +180,34 @@ namespace Tanks
 
             LivesText.Content = "Gyvybės: " + tank.speed;
 
-            PlayerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
-            playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
+            _playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
+            _playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             ActionController controller = new ActionController();
 
-            if (moveLeft == true)
+            if (_moveLeft)
             {
                 controller.SetCommand(new CommandMoveLeft(tank));
-                action = new PlayerAction(ActionType.move, FacingSide.Left);
+                action = new PlayerAction(ActionType.Move, FacingSide.Left);
             }
-            if (moveRight == true)
+            if (_moveRight)
             {
                 controller.SetCommand(new CommandMoveRight(tank));
-                action = new PlayerAction(ActionType.move, FacingSide.Right);
+                action = new PlayerAction(ActionType.Move, FacingSide.Right);
             }
-            if (moveUp == true)
+            if (_moveUp)
             {
                 controller.SetCommand(new CommandMoveUp(tank));
-                action = new PlayerAction(ActionType.move, FacingSide.Up);
+                action = new PlayerAction(ActionType.Move, FacingSide.Up);
             }
-            if (moveDown == true)
+            if (_moveDown)
             {
                 controller.SetCommand(new CommandMoveDown(tank));
-                action = new PlayerAction(ActionType.move, FacingSide.Down);
+                action = new PlayerAction(ActionType.Move, FacingSide.Down);
             }
-            if (shoot == true)
+            if (_shoot)
             {
                 Thread.Sleep(100);
-                action = new PlayerAction(ActionType.shoot, tank.side);
+                action = new PlayerAction(ActionType.Shoot, tank.side);
             }
 
             controller.Execute();
@@ -225,8 +217,8 @@ namespace Tanks
             if (action != null)
             {
                 string json = JsonConvert.SerializeObject(action);
-                data = Encoding.ASCII.GetBytes(json);
-                socket.Send(data);
+                byte [] data = Encoding.ASCII.GetBytes(json);
+                _socket.Send(data);
             }
 
             SendKeepAlive();
@@ -234,14 +226,13 @@ namespace Tanks
 
         private void SendKeepAlive()
         {
-            byte[] data;
-            if ((DateTime.Now - previous).Seconds > 30)
+            if ((DateTime.Now - _previous).Seconds > 30)
             {
-                data = new byte[0];
+                byte[] data = new byte[0];
                 try
                 {
-                    socket.Receive(data);
-                    socket.Send(data, SocketFlags.None);
+                    _socket.Receive(data);
+                    _socket.Send(data, SocketFlags.None);
                 }
                 catch { }
             }
@@ -252,29 +243,29 @@ namespace Tanks
             Rectangle player = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self].Rectangle;
             if (e.Key == Key.Left)
             {
-                moveLeft = true;
+                _moveLeft = true;
                 player.RenderTransform = new RotateTransform(-90, player.Width / 2, player.Height / 2);
             }
             if (e.Key == Key.Right)
             {
-                moveRight = true;
+                _moveRight = true;
                 player.RenderTransform = new RotateTransform(90, player.Width / 2, player.Height / 2);
 
             }
             if (e.Key == Key.Up)
             {
-                moveUp = true;
+                _moveUp = true;
                 player.RenderTransform = new RotateTransform(0, player.Width / 2, player.Height / 2);
 
             }
             if (e.Key == Key.Down)
             {
-                moveDown = true;
+                _moveDown = true;
                 player.RenderTransform = new RotateTransform(-180, player.Width / 2, player.Height / 2);
             }
             if (e.Key == Key.Space)
             {
-                shoot = true;
+                _shoot = true;
             }
         }
 
@@ -282,26 +273,26 @@ namespace Tanks
         {
             if (e.Key == Key.Left)
             {
-                moveLeft = false;
+                _moveLeft = false;
             }
             if (e.Key == Key.Right)
             {
-                moveRight = false;
+                _moveRight = false;
             }
             if (e.Key == Key.Up)
             {
-                moveUp = false;
+                _moveUp = false;
             }
             if (e.Key == Key.Down)
             {
-                moveDown = false;
+                _moveDown = false;
             }
             if (e.Key == Key.Space)
             {
-                shoot = false;
+                _shoot = false;
             }
 
-            if (e.Key == Key.Enter && gameOver == true)
+            if (e.Key == Key.Enter && _gameOver)
             {
                 StartGame();
             }
@@ -309,16 +300,16 @@ namespace Tanks
 
         private void StartGame()
         {
-            gameTimer.Start();
+            _gameTimer.Start();
 
-            moveRight = false;
-            moveLeft = false;
-            moveUp = false;
-            moveDown = false;
-            shoot = false;
-            gameOver = false;
+            _moveRight = false;
+            _moveLeft = false;
+            _moveUp = false;
+            _moveDown = false;
+            _shoot = false;
+            _gameOver = false;
 
-            livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));
+            _livesImage.ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/3Hearts.png"));
             MyCanvas.Background = Brushes.DarkGray;
         }
     }        

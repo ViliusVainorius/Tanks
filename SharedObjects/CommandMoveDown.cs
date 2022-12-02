@@ -12,40 +12,40 @@ namespace SharedObjects
     /// The 'Adapter' class
     public class CommandMoveDown : CommandMove
     {
-        Tank tank;
-        Player player;
+        Tank _tank;
+        Player _player;
 
-        public CommandMoveDown(Tank tank, Player player = null): base()
+        public CommandMoveDown(Tank tank, Player player = null)
         {
-            this.tank = tank;
-            this.player = player;
+            this._tank = tank;
+            this._player = player;
         }
 
-        public override void execute()
+        public override void Execute()
         {
-            System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(tank.X, tank.Y + tank.speed, tank.Width, tank.Height);
+            System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(_tank.X, _tank.Y + _tank.speed, _tank.Width, _tank.Height);
             
             CommandCollide collisions = new CommandCollide();
-            GameObject obst = obstacle;
-            bool inter = intersects;
+            GameObject obst = Obstacle;
+            bool inter = Intersects;
             collisions.CheckCollisionWithWalls(newPosition, ref obst, ref inter);
-            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, player);
-            obstacle = obst;
-            intersects = inter;
+            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, _player);
+            Obstacle = obst;
+            Intersects = inter;
 
-            int y = -1;
+            int y;
 
-            if (intersects)
+            if (Intersects)
             {
-                y = obstacle.Y - tank.Height;
+                y = Obstacle.Y - _tank.Height;
             }
             else
             {
-                y = tank.Y + tank.speed;
+                y = _tank.Y + _tank.speed;
             }
 
-            tank.Y = y;
-            tank.side = FacingSide.Down;
+            _tank.Y = y;
+            _tank.side = FacingSide.Down;
         }
     }
 }

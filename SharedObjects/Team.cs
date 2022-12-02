@@ -8,6 +8,6 @@ namespace SharedObjects
 {
     public abstract class Team
     {
-        public abstract AbstractFactory getAbstractFactory();
+        public abstract AbstractFactory GetAbstractFactory();
     }
 }

@@ -28,7 +28,7 @@ namespace SharedObjects
 
     public enum ActionType
     {
-        move,
-        shoot
+        Move,
+        Shoot
     }
 }

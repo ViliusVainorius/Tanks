@@ -9,20 +9,22 @@ namespace SharedObjects
 {
     public class CommandShoot : CommandMove
     {
-        Tank tank;
-        List<Bullet> bullets;
+        Tank _tank;
+        List<Bullet> _bullets;
+        private double _myDouble;
+        private double _myDouble21;
 
         public CommandShoot(Tank tank, List<Bullet> bullets)
         {
-            this.tank = tank;
-            this.bullets = bullets;
+            this._tank = tank;
+            this._bullets = bullets;
         }
 
-        public override void execute()
+        public override void Execute()
         {
             // updting lives
 
-            StreamWriter writer;
+           // StreamWriter writer;
 
             /*using (writer = new StreamWriter(@"C:\Users\vytau\Documents\KTU\7 pusmetis\Objektinis programų projektavimas\Temporary2.txt"))
             {

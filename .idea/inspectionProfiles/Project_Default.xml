@@ -1,0 +1,12 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <searchConfiguration name="Double variable usage" problemDescriptor="This project should avoid double type usage" text="$int$" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="int" within="" contains="" />
+      </searchConfiguration>
+    </inspection_tool>
+    <inspection_tool class="b818dd55-949e-35b3-9328-85aaafb59bb8" enabled="true" level="WARNING" enabled_by_default="true" />
+  </profile>
+</component>

@@ -37,7 +37,7 @@ namespace SharedObjects
                 UsedPowerup powerup = new UsedPowerup();
                 if (gameObjectContainer.Powerups[i].GetType() == powerup.GetType())
                 {
-                    powerup._rectangle = Powerups[i].Rectangle;
+                    powerup.rectangle = Powerups[i].Rectangle;
                     Powerups[i] = powerup;
                 }
             }
@@ -52,35 +52,35 @@ namespace SharedObjects
             else
             {
                 List<Bullet> bullets = new List<Bullet>();
-                List<Bullet> remove = new List<Bullet>();
+                List<Bullet> removeList = new List<Bullet>();
  
-                for (int i = 0; i < Bullets.Length; i++)
+                foreach (var b in Bullets)
                 {
                     bool found = false;
                     foreach (Bullet bullet in gameObjectContainer.Bullets)
                     {
-                        if (bullet.bulletId == Bullets[i].bulletId)
+                        if (bullet.bulletId == b.bulletId)
                         {
                             found = true;
-                            Bullets[i].X = bullet.X;
-                            Bullets[i].Y = bullet.Y;
-                            bullets.Add(Bullets[i]);
+                            b.X = bullet.X;
+                            b.Y = bullet.Y;
+                            bullets.Add(b);
                             break;
                         }
                     }
                     // deletes bullet if needed
                     if (!found)
                     {
-                        remove.Add(Bullets[i]);
+                        removeList.Add(b);
                     }
                 }
                 // check which of bullets are new and draws them
                 foreach(Bullet bullet in gameObjectContainer.Bullets)
                 {
                     bool found = false;
-                    for (int i = 0; i < Bullets.Length; i++)
+                    foreach (var b in Bullets)
                     {
-                        if (bullet.bulletId == Bullets[i].bulletId)
+                        if (bullet.bulletId == b.bulletId)
                         {
                             found = true;
                             break;
@@ -94,7 +94,7 @@ namespace SharedObjects
                 }
 
                 Bullets = bullets.ToArray();
-                this.remove = remove.ToArray();
+                this.remove = removeList.ToArray();
             }
         }
 
@@ -106,7 +106,6 @@ namespace SharedObjects
         public void ReadXml(XmlReader reader)
         {
             reader.MoveToContent();
-            XmlNamespaceManager manager = new XmlNamespaceManager(new NameTable());
             List<Tank> tanks = new List<Tank>();
             List<Wall> walls = new List<Wall>();
             List<Powerup> powerups = new List<Powerup>();
@@ -125,23 +124,22 @@ namespace SharedObjects
                         walls.Add(new Wall(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height"))));
                         break;
                     case "Tank":
-                        string temp = "Heavy";
                         Creator ctr = new TankCreator();
-                        Team MyTeam = ctr.factoryMethod("R"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
+                        Team myTeam = ctr.FactoryMethod("R"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
                         
-                        AbstractFactory unitFactory = MyTeam.getAbstractFactory(); // initiliazing abstract factory
+                        AbstractFactory unitFactory = myTeam.GetAbstractFactory(); // initializing abstract factory
 
-                        Tank MyTank = null;
+                        Tank myTank = null;
                         string userInput = "Heavy"; // "Heavy - creates a heavy tank/ "Light" - creates a light tank"
 
                         if (userInput.Equals("Heavy"))
                         {
-                            MyTank = unitFactory.createHeavyTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), 
+                            myTank = unitFactory.CreateHeavyTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), 
                                 int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
                         }
                         if (userInput.Equals("Light"))
                         {
-                            MyTank = unitFactory.createLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")),
+                            myTank = unitFactory.CreateLightTank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")),
                                 int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")));
                         }
 
@@ -150,8 +148,8 @@ namespace SharedObjects
 
 
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
-                        MyTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
-                        tanks.Add(MyTank);
+                        myTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
+                        tanks.Add(myTank);
                         break;
                     case "Bullet":
                         bullets.Add(new Bullet(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("speed")), int.Parse(reader.GetAttribute("bulletId"))));
