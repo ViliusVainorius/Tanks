@@ -11,9 +11,6 @@ namespace SharedObjects
     {
         Tank _tank;
         List<Bullet> _bullets;
-        private double _myDouble;
-        private double _myDouble21;
-
         public CommandShoot(Tank tank, List<Bullet> bullets)
         {
             this._tank = tank;
