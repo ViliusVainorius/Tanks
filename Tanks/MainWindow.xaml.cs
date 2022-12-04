@@ -178,7 +178,10 @@ namespace Tanks
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
-            LivesText.Content = "Gyvybės: " + tank.speed;
+            
+            LivesText.Content = "Gyvybės: " + tank.lives;
+            
+            
 
             _playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             _playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);

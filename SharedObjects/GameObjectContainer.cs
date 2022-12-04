@@ -125,12 +125,29 @@ namespace SharedObjects
                         break;
                     case "Tank":
                         Creator ctr = new TankCreator();
-                        Team myTeam = ctr.FactoryMethod("R"); // creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
-                        
+                        string color = "R";
+                        // X = 135 Pirmas player
+                        // X = 635 Antras player
+                        //----------------------------------------------
+                        if (int.Parse(reader.GetAttribute("X")) == 135)
+                            color = "B";
+                        else if(int.Parse(reader.GetAttribute("X")) == 635)
+                            color = "R";
+                        //----------------------------------------------
+                        Team myTeam = ctr.FactoryMethod(color);// creates a Blue tank (blue skin for a player1 tank "B" - blue skin/ "R"- red skin)
+
                         AbstractFactory unitFactory = myTeam.GetAbstractFactory(); // initializing abstract factory
 
                         Tank myTank = null;
                         string userInput = "Heavy"; // "Heavy - creates a heavy tank/ "Light" - creates a light tank"
+                        // X = 135 Pirmas player
+                        // X = 635 Antras player
+                        //----------------------------------------------
+                        if (int.Parse(reader.GetAttribute("X")) == 135)
+                            userInput = "Heavy";
+                        else if (int.Parse(reader.GetAttribute("X")) == 635)
+                            userInput = "Light";
+                        //----------------------------------------------
 
                         if (userInput.Equals("Heavy"))
                         {

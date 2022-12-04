@@ -8,7 +8,7 @@
         Title="Tanks" Height="500" Width="900">
     <Canvas Background="DarkGray" Name="MyCanvas" Focusable="True" KeyDown="OnKeyDown" KeyUp="OnKeyUp">
 
-        <Label  Name="LivesText" Content="Gyvybės: " Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="10" Height="40" Canvas.Left="10" />
+        <Label  Name="LivesText" Content="Gyvybės: " Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="5" Height="40" Canvas.Left="5" />
 
     </Canvas>
 </Window>
