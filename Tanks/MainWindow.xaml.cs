@@ -180,8 +180,6 @@ namespace Tanks
 
             
             LivesText.Content = "Gyvybės: " + tank.lives;
-            
-            
 
             _playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             _playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);

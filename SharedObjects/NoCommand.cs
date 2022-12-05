@@ -8,5 +8,6 @@ namespace SharedObjects
 {
     public class NoCommand : CommandMove
     {
+        public NoCommand() : base(null) { }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SharedObjects
 {
-    public class CommandShoot : CommandMove
+    public class CommandShoot
     {
         Tank _tank;
         List<Bullet> _bullets;
@@ -17,7 +17,7 @@ namespace SharedObjects
             this._bullets = bullets;
         }
 
-        public override void Execute()
+        public void Execute()
         {
             // updting lives
 

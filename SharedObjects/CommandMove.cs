@@ -9,13 +9,11 @@ namespace SharedObjects
     /// The 'Target' class
     public class CommandMove
     {
-        public bool Intersects { get; set; }
-        public GameObject Obstacle { get;set;}
+        public Tank tank;
 
-        public CommandMove()
+        public CommandMove(Tank tank)
         {
-            Intersects = false;
-            Obstacle = null;
+            this.tank = tank;
         }
 
         public virtual void Execute() { }

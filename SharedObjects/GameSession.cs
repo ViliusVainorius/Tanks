@@ -22,6 +22,7 @@ namespace SharedObjects
         public int self;
         public GameObjectContainer GameObjectContainer;
         public static string xmlFileName;
+        public bool gameStarted = false;
         
         private static GameSession _instance;
 
@@ -30,6 +31,7 @@ namespace SharedObjects
         private GameSession()
         {
             StartTime = DateTime.Now;
+            gameStarted = true;
         }
 
         private static GameSession DeserializeGameSession()

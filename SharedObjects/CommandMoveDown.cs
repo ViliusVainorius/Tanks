@@ -12,40 +12,27 @@ namespace SharedObjects
     /// The 'Adapter' class
     public class CommandMoveDown : CommandMove
     {
-        Tank _tank;
-        Player _player;
-
-        public CommandMoveDown(Tank tank, Player player = null)
-        {
-            this._tank = tank;
-            this._player = player;
-        }
+        public CommandMoveDown(Tank tank) : base(tank) { }
 
         public override void Execute()
         {
-            System.Drawing.Rectangle newPosition = new System.Drawing.Rectangle(_tank.X, _tank.Y + _tank.speed, _tank.Width, _tank.Height);
-            
-            CommandCollide collisions = new CommandCollide();
-            GameObject obst = Obstacle;
-            bool inter = Intersects;
-            collisions.CheckCollisionWithWalls(newPosition, ref obst, ref inter);
-            collisions.CheckCollisionWithEnemy(newPosition, ref obst, ref inter, _player);
-            Obstacle = obst;
-            Intersects = inter;
+            tank.Y += tank.speed;
+            GameObject obstacle = null;
+            tank.side = FacingSide.Down;
 
-            int y;
+            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Walls);
 
-            if (Intersects)
+            if (obstacle != null)
             {
-                y = Obstacle.Y - _tank.Height;
-            }
-            else
-            {
-                y = _tank.Y + _tank.speed;
+                tank.Y = obstacle.Y - tank.Height;
             }
 
-            _tank.Y = y;
-            _tank.side = FacingSide.Down;
+            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Tanks);
+
+            if(obstacle != null)
+            {
+                tank.Y = obstacle.Y - tank.Height;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using SharedObjects;
 using Newtonsoft.Json;
 using System.IO;
 using System.Xml.Serialization;
+using System.Threading;
 
 namespace Server
 {
@@ -16,7 +17,8 @@ namespace Server
         private Socket _socket;
         private List<Player> _players = new List<Player>();
         private DateTime _previous;
-        private int _bulletCount = 0; // total bullets in a field
+        private int _bulletId = 0; //Unique bullet id
+        private bool gameStarted = false;
 
         public Server() : this(8888) { }
 
@@ -30,7 +32,7 @@ namespace Server
             _previous = DateTime.Now;
         }
 
-        public void CreateBullet(ref List<Bullet> bullets, Tank t)
+        public void CreateBullet(Tank t)
         {
             // create bullet
             int x = t.X;
@@ -60,28 +62,17 @@ namespace Server
             }
 
             Bullet b = new Bullet(x, y, width,
-                height, t.speed, _bulletCount, t.side);
-            _bulletCount++;
+                height, t.speed, _bulletId++, t.side);
 
-            // and to list
-           //bullets.Append(b);
-            bullets.Add(b);
-        }
-        public void RemoveBullet(ref List<Bullet> bullets, Bullet bullet)
-        {
-            // move all bullets into removable bullet place
-            for (int i = bullet.bulletId; i < bullets.Count - 1; i++)
-            {
-                bullets[i] = bullets[i + 1];
-            }
-            // remove last bullet
-            _bulletCount--;
-            bullets.Remove(bullets[bullets.Count - 1]);
+            List<Bullet> bulletList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
+            bulletList.Add(b);
+            GameSession.Instance.GameObjectContainer.Bullets = bulletList.ToArray();
         }
 
         public void Start()
         {
             Console.WriteLine("Server has been started!");
+            Timer timer = new Timer(UpdateGame, "", TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(50));
 
             while (true)
             {
@@ -99,8 +90,6 @@ namespace Server
                 string data = Encoding.ASCII.GetString(packet.Data);
                 try
                 {
-                    List<Bullet> bulletsList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
-                    Wall [] walls = GameSession.Instance.GameObjectContainer.Walls;
                     PlayerAction action = JsonConvert.DeserializeObject<PlayerAction>(data);
 
                     Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks; 
@@ -114,52 +103,48 @@ namespace Server
                             {
                                 if (action.type == ActionType.Move)
                                 {
-                                    controller.SetCommand(new CommandMoveRight(tanks[i], player));
+                                    controller.SetCommand(new CommandMoveRight(tanks[i]));
                                     tanks[i].Rotation = 90;
                                 }
                                 else if(action.type == ActionType.Shoot)
                                 {
-                                    CreateBullet(ref bulletsList, tanks[i]);
-                                    controller.SetCommand(new CommandShoot(tanks[i], bulletsList));
+                                    CreateBullet(tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Left)
                             {
                                 if (action.type == ActionType.Move)
                                 {
-                                    controller.SetCommand(new CommandMoveLeft(tanks[i], player));
+                                    controller.SetCommand(new CommandMoveLeft(tanks[i]));
                                     tanks[i].Rotation = -90;
                                 }
                                 else if (action.type == ActionType.Shoot)
                                 {
-                                    CreateBullet(ref bulletsList, tanks[i]);
-                                    //controller.SetCommand(new CommandShoot(tanks[i]));
+                                    CreateBullet(tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Up)
                             {
                                 if (action.type == ActionType.Move)
                                 {
-                                    controller.SetCommand(new CommandMoveUp(tanks[i], player));
+                                    controller.SetCommand(new CommandMoveUp(tanks[i]));
                                     tanks[i].Rotation = 0;
                                 }
                                 else if (action.type == ActionType.Shoot)
                                 {
-                                    CreateBullet(ref bulletsList, tanks[i]);
-                                    //controller.SetCommand(new CommandShoot(tanks[i]));
+                                    CreateBullet(tanks[i]);
                                 }
                             }
                             else if (action.side == FacingSide.Down)
                             {
                                 if (action.type == ActionType.Move)
                                 {
-                                    controller.SetCommand(new CommandMoveDown(tanks[i], player));
+                                    controller.SetCommand(new CommandMoveDown(tanks[i]));
                                     tanks[i].Rotation = -180;
                                 }
                                 else if (action.type == ActionType.Shoot)
                                 {
-                                    CreateBullet(ref bulletsList, tanks[i]);
-                                    //controller.SetCommand(new CommandShoot(tanks[i]));
+                                    CreateBullet(tanks[i]);
                                 }
                             }
 
@@ -167,69 +152,17 @@ namespace Server
                         }
 
                         Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
-                        for (int j = 0; j < powerups.Length; j++)
+                        Powerup powerup = (Powerup)tanks[i].CheckCollision(GameSession.Instance.GameObjectContainer.Powerups);
+                        if(powerup != null)
                         {
-                            if (powerups[j] != null && tanks[i].Intersect(powerups[j]))
+                            powerup.PickUp(ref tanks[i]);
+                            for(int j = 0; j < powerups.Length; j++)
                             {
-                                powerups[j].PickUp(ref tanks[i]);
-                                powerups[j] = new UsedPowerup();
-                            }
-                        }
-
-                        // check bullets collision with tanks
-                        Bullet[] bullets = GameSession.Instance.GameObjectContainer.Bullets;
-                        foreach (var bullet in bullets)
-                        {
-                            if (bullet != null )
-                            {
-                                if (tanks[i].Intersect(bullet))
+                                if(powerup == powerups[j])
                                 {
-                                    tanks[i].lives --;
-                                    RemoveBullet(ref bulletsList, bullet);
+                                    powerups[j] = new UsedPowerup();
                                 }
                             }
-                        }
-                    }
-
-                    // check for bullet collisions with walls
-                    foreach (var wall in walls)
-                    {
-                        for (int j = 0; j < bulletsList.Count; j++)
-                        {
-                            if (bulletsList[j] != null)
-                            {
-                                if (wall.Intersect(bulletsList[j]))
-                                {
-                                    RemoveBullet(ref bulletsList, bulletsList[j]);
-                                }
-                            }
-                        }
-                    }
-
-                    // move bullets
-                    foreach (Bullet bullet in bulletsList)
-                    {
-                        if (bullet != null)
-                        {
-                            int x = bullet.MoveX(bullet.side);
-                            int y = bullet.MoveY(bullet.side);
-
-                            bullet.X += x;
-                            bullet.Y += y;
-                        }
-                    }
-
-                    GameSession.Instance.GameObjectContainer.Bullets = bulletsList.ToArray();
-                    GameSession.Instance.GameObjectContainer.Tanks = tanks.ToArray();
-
-                    foreach (Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
-                    {
-                        XmlSerializer ser = new XmlSerializer(typeof(GameObjectContainer));
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            ser.Serialize(ms, GameSession.Instance.GameObjectContainer);
-                            packet = new Packet(tank.player.EndPoint, ms.ToArray());
-                            packet.SendToEndPoint(_socket);
                         }
                     }
                 }
@@ -237,8 +170,36 @@ namespace Server
             }
         }
 
+        private void UpdateGame(object state)
+        {
+            if (!gameStarted)
+                return;
+
+            foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.Bullets)
+            {
+                if (bullet != null)
+                {
+                    bullet.Move();
+                }
+            }
+
+            foreach (Tank tank in GameSession.Instance.GameObjectContainer.Tanks)
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(GameObjectContainer));
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ser.Serialize(ms, GameSession.Instance.GameObjectContainer);
+                    Packet packet = new Packet(tank.player.EndPoint, ms.ToArray());
+                    packet.SendToEndPoint(_socket);
+                }
+            }
+        }
+
         private void TryStartGame()
         {
+            if(gameStarted)
+                return;
+
             if(_players.Count >= 2)
             {
                 int player1 = -1;
@@ -289,6 +250,8 @@ namespace Server
                     packet.SendToEndPoint(_socket);
                 }
                 _players[player2].isInGame = true;
+
+                gameStarted = true;
             }
         }
 

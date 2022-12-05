@@ -166,6 +166,7 @@ namespace SharedObjects
 
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
                         myTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
+                        myTank.lives = int.Parse(reader.GetAttribute("lives"));
                         tanks.Add(myTank);
                         break;
                     case "Bullet":
@@ -223,6 +224,7 @@ namespace SharedObjects
                 writer.WriteAttributeString("Y", tank.Y.ToString());
                 writer.WriteAttributeString("speed", tank.speed.ToString());
                 writer.WriteAttributeString("Rotation", tank.Rotation.ToString());
+                writer.WriteAttributeString("lives", tank.lives.ToString());
                 int side = (int)tank.side;
                 writer.WriteAttributeString("side", side.ToString());
                 writer.WriteEndElement();

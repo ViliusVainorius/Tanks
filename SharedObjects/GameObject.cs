@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,19 @@ namespace SharedObjects
             System.Drawing.Rectangle selfRect = new System.Drawing.Rectangle(X, Y, Width, Height);
 
             return selfRect.IntersectsWith(other);
+        }
+
+        public GameObject CheckCollision(GameObject[] gameObjects)
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                if (gameObject != null && this != gameObject && gameObject.Intersect(this))
+                {
+                    return gameObject;
+                }
+            }
+
+            return null;
         }
 
         public Rectangle Rectangle => _rect ?? (_rect = GetNewRectangle());

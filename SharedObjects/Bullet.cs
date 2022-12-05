@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Media;
+using System.Collections;
 
 namespace SharedObjects
 {
@@ -48,36 +49,58 @@ namespace SharedObjects
             return rec;
         }
 
-        public int MoveX(FacingSide fs)
+        public void Move()
         {
-            int x = 0;
-
-            if (fs == FacingSide.Right)
+            switch (side)
             {
-                x = 1;
-            }
-            else if (fs == FacingSide.Left)
-            {
-                x = -1;
-            }
-
-            return x;
-        }
-
-        public int MoveY(FacingSide fs)
-        {
-            int y = 0;
-
-            if (fs == FacingSide.Up)
-            {
-                y = 1;
-            }
-            else if (fs == FacingSide.Down)
-            {
-                y = -1;
+                case FacingSide.Up:
+                    Y -= speed;
+                    break;
+                case FacingSide.Down:
+                    Y += speed;
+                    break;
+                case FacingSide.Left:
+                    X -= speed;
+                    break;
+                case FacingSide.Right:
+                    X += speed;
+                    break;
             }
 
-            return y;
+            List<Bullet> bullets = GameSession.Instance.GameObjectContainer.Bullets.ToList();
+
+            GameObject gameObject = CheckCollision(GameSession.Instance.GameObjectContainer.Tanks);
+            Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
+
+            if(gameObject != null)
+            {
+                for(int i = 0; i < tanks.Length; i++)
+                {
+                    if(gameObject == tanks[i])
+                    {
+                        tanks[i].lives--;
+                        bullets.Remove(this);
+                        GameSession.Instance.GameObjectContainer.Bullets = bullets.ToArray();
+                        return;
+                    }
+                }
+            }
+
+            gameObject = CheckCollision(GameSession.Instance.GameObjectContainer.Walls);
+            Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
+
+            if (gameObject != null)
+            {
+                for (int i = 0; i < walls.Length; i++)
+                {
+                    if (gameObject == walls[i])
+                    {
+                        bullets.Remove(this);
+                        GameSession.Instance.GameObjectContainer.Bullets = bullets.ToArray();
+                        return;
+                    }
+                }
+            }
         }
     }
 }

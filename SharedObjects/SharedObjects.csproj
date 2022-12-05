@@ -75,7 +75,6 @@
     <Compile Include="BlueLightTank.cs" />
     <Compile Include="BlueTeam.cs" />
     <Compile Include="Bullet.cs" />
-    <Compile Include="CommandCollide.cs" />
     <Compile Include="CommandMove.cs" />
     <Compile Include="CommandMoveDown.cs" />
     <Compile Include="CommandMoveUp.cs" />
