@@ -25,7 +25,7 @@ namespace SharedObjects
         }
         public TripleShotPowerup CreateTripleShootPowerup()
         {
-            _tripleShootP = new TripleShotPowerup(DefaultVal + 10, DefaultVal + 10, DefaultVal / 4 , DefaultVal / 4);
+            _tripleShootP = new TripleShotPowerup(DefaultVal + 200, DefaultVal + 40, DefaultVal / 3, DefaultVal / 3);
             return (_tripleShootP as TripleShotPowerup);
         }
         public HealthPowerup CreateHealthPowerup()

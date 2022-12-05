@@ -34,16 +34,36 @@ namespace Server
 
         public void CreateBullet(Tank t)
         {
-            // create bullet
+            List<Bullet> bulletList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
             int x = t.X;
             int y = t.Y;
+            bool triple = t.hasTripleShoot;
+
             int width = t.Width / 3;
             int height = t.Height / 3;
-            
-            if (t.side == FacingSide.Left) 
+
+
+            int bulletsToCreate = triple ? 3 : 1;
+
+            GetBulletCoordinates(t, ref x, ref y, width, height);
+            for (int i = 0; i < bulletsToCreate; i++)
+            {
+                GetOffsetBulletCoordinates(t, ref x, ref y, i * 12);
+                Bullet b = new Bullet(x, y, width,
+                    height, t.speed, _bulletId++, t.side);
+                bulletList.Add(b);
+            }
+
+            GameSession.Instance.GameObjectContainer.Bullets = bulletList.ToArray();
+        }
+        
+        // offset - distance between two bullets, if triple shot
+        public void GetBulletCoordinates(Tank t, ref int x, ref int y, int width, int height)
+        {
+            if (t.side == FacingSide.Left)
             {
                 x -= (t.Width) - width;
-                y += (t.Height / 2) - height / 2; 
+                y += (t.Height / 2) - height / 2;
             }
             else if (t.side == FacingSide.Right)
             {
@@ -53,20 +73,34 @@ namespace Server
             else if (t.side == FacingSide.Down)
             {
                 y += (t.Height) + 1;
-                x += t.Width / 2 - width / 2; 
+                x += t.Width / 2 - width / 2;
             }
             else if (t.side == FacingSide.Up)
             {
                 y -= (height);
                 x += t.Width / 2 - width / 2;
             }
+        }
+        // offset - distance between two bullets, if triple shot
+        public void GetOffsetBulletCoordinates(Tank t, ref int x, ref int y, int offset = 0)
+        {
 
-            Bullet b = new Bullet(x, y, width,
-                height, t.speed, _bulletId++, t.side);
-
-            List<Bullet> bulletList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
-            bulletList.Add(b);
-            GameSession.Instance.GameObjectContainer.Bullets = bulletList.ToArray();
+            if (t.side == FacingSide.Left)
+            {
+                x -= offset;
+            }
+            else if (t.side == FacingSide.Right)
+            {
+                x += offset;
+            }
+            else if (t.side == FacingSide.Down)
+            {
+                y += offset;
+            }
+            else if (t.side == FacingSide.Up)
+            {
+                y -= offset;
+            }
         }
 
         public void Start()
