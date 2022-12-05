@@ -42,15 +42,27 @@ namespace Server
             int width = t.Width / 3;
             int height = t.Height / 3;
 
-
-            int bulletsToCreate = triple ? 3 : 1;
-
             GetBulletCoordinates(t, ref x, ref y, width, height);
-            for (int i = 0; i < bulletsToCreate; i++)
+
+            List<Bullet> newbulletList;
+            BulletContext context;
+            if (triple)
             {
-                GetOffsetBulletCoordinates(t, ref x, ref y, i * 12);
-                Bullet b = new Bullet(x, y, width,
-                    height, t.speed, _bulletId++, t.side);
+                TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side); 
+                context = new BulletContext(tripleBullet);
+                _bulletId += tripleBullet.bulletsToCreate;
+            }
+            else
+            {
+                SimpleBullet simpleBullet = new SimpleBullet(x, y, width, height, t.speed, _bulletId, t.side);
+                context = new BulletContext(simpleBullet);
+                _bulletId += simpleBullet.bulletsToCreate;
+            }
+
+            newbulletList = context.RequestShoot();
+
+            foreach (Bullet b in newbulletList)
+            {
                 bulletList.Add(b);
             }
 
@@ -79,27 +91,6 @@ namespace Server
             {
                 y -= (height);
                 x += t.Width / 2 - width / 2;
-            }
-        }
-        // offset - distance between two bullets, if triple shot
-        public void GetOffsetBulletCoordinates(Tank t, ref int x, ref int y, int offset = 0)
-        {
-
-            if (t.side == FacingSide.Left)
-            {
-                x -= offset;
-            }
-            else if (t.side == FacingSide.Right)
-            {
-                x += offset;
-            }
-            else if (t.side == FacingSide.Down)
-            {
-                y += offset;
-            }
-            else if (t.side == FacingSide.Up)
-            {
-                y -= offset;
             }
         }
 

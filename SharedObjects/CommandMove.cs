@@ -16,7 +16,28 @@ namespace SharedObjects
             this.tank = tank;
         }
 
-        public virtual void Execute() { }
+        // template pattern - method has its steps, which are implemented in subclasses
+        public void Execute()
+        {
+            MoveOneTime();
+            ChangeDirection();
+            MoveBack(GameSession.Instance.GameObjectContainer.Walls);
+            MoveBack(GameSession.Instance.GameObjectContainer.Tanks);
+        }
+
+        public virtual void MoveOneTime()
+        {
+
+        }
+        public virtual void ChangeDirection()
+        {
+
+        }
+
+        public virtual void MoveBack(GameObject[] objects)
+        {
+
+        }
 
     }
 }

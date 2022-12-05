@@ -14,21 +14,20 @@ namespace SharedObjects
     {
         public CommandMoveRight(Tank tank) : base(tank) { }
 
-        public override void Execute()
+        public override void MoveOneTime()
         {
             tank.X += tank.speed;
-            GameObject obstacle = null;
+        }
+
+        public override void ChangeDirection()
+        {
             tank.side = FacingSide.Right;
+        }
 
-            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Walls);
-
-            if (obstacle != null)
-            {
-                tank.X = obstacle.X - tank.Width;
-            }
-
-            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Tanks);
-
+        public override void MoveBack(GameObject[] objects)
+        {
+            GameObject obstacle = null;
+            obstacle = tank.CheckCollision(objects);
             if (obstacle != null)
             {
                 tank.X = obstacle.X - tank.Width;

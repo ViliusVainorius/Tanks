@@ -12,27 +12,29 @@ namespace SharedObjects
     /// The 'Adapter' class
     public class CommandMoveDown : CommandMove
     {
-        public CommandMoveDown(Tank tank) : base(tank) { }
+        public CommandMoveDown(Tank tank) : base(tank)
+        {
+        }
 
-        public override void Execute()
+        public override void MoveOneTime()
         {
             tank.Y += tank.speed;
-            GameObject obstacle = null;
+        }
+
+        public override void ChangeDirection()
+        {
             tank.side = FacingSide.Down;
+        }
 
-            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Walls);
-
-            if (obstacle != null)
+        public override void MoveBack(GameObject[] objects)
+        {
+            GameObject obstacleWalls = null;
+            obstacleWalls = tank.CheckCollision(objects);
+            if (obstacleWalls != null)
             {
-                tank.Y = obstacle.Y - tank.Height;
-            }
-
-            obstacle = tank.CheckCollision(GameSession.Instance.GameObjectContainer.Tanks);
-
-            if(obstacle != null)
-            {
-                tank.Y = obstacle.Y - tank.Height;
+                tank.Y = obstacleWalls.Y - tank.Height;
             }
         }
+
     }
 }
