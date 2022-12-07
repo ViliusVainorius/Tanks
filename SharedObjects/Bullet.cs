@@ -173,7 +173,6 @@ namespace SharedObjects
             public override List<Bullet> Shoot(ref Tank t)
             {
                 List<Bullet> bullets = new List<Bullet>();
-                // context change
                 // if 10 seconds from triple shoot powerup has passed, state changes to SimpleBullet state
                 if ((DateTime.Now - tripleshootstartime).Seconds > 10)
                 {
@@ -193,7 +192,6 @@ namespace SharedObjects
                         bullets.Add(b);
                     }
                 }
-
                 return bullets;
             }
 
@@ -242,6 +240,13 @@ namespace SharedObjects
             {
                 this._state = st;
                 this._state.SetContext(this);
+            }
+
+            public int GetBulletsCount()
+            {
+                if (_state is TripleBullet)
+                    return 3;
+                return 1;
             }
         }
     }

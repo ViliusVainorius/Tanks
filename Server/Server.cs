@@ -51,15 +51,14 @@ namespace Server
                 TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side,
                     t.tripleshootstartime); 
                 context = new BulletContext(tripleBullet);
-                _bulletId += tripleBullet.bulletsToCreate;
             }
             else
             {
                 SimpleBullet simpleBullet = new SimpleBullet(x, y, width, height, t.speed, _bulletId, t.side);
                 context = new BulletContext(simpleBullet);
-                _bulletId += simpleBullet.bulletsToCreate;
             }
 
+            _bulletId += context.GetBulletsCount();
             newbulletList = context.RequestShoot(ref t);
 
             foreach (Bullet b in newbulletList)
