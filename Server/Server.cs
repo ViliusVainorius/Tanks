@@ -204,7 +204,7 @@ namespace Server
             {
                 if (bullet != null)
                 {
-                    bullet.Move();
+                    bullet.Move(ref _bulletId);
                 }
             }
 

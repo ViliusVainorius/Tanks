@@ -117,7 +117,7 @@ namespace Tanks
             }
 
             _gameTimer.Tick += GameLoop;
-            _gameTimer.Interval = TimeSpan.FromMilliseconds(20);
+            _gameTimer.Interval = TimeSpan.FromMilliseconds(5);
 
             StartGame();
         }
