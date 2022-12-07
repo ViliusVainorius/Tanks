@@ -21,7 +21,14 @@ namespace SharedObjects
         public FacingSide side { get; set; }
         public int bulletsToCreate { get; set; }
 
-        public Bullet(int x, int y, int width, int height, int speed, int bulletId, FacingSide side = FacingSide.Right) : base(x, y, width, height)
+        protected BulletContext _context;
+        public void SetContext(BulletContext context)
+        {
+            this._context = context;
+        }
+
+        public Bullet(int x, int y, int width, int height, int speed, int bulletId, FacingSide side = FacingSide.Right)
+            : base(x, y, width, height)
         {
             this.speed = speed;
             this.bulletId = bulletId;
@@ -61,7 +68,7 @@ namespace SharedObjects
         }
 
         // hande abstract class for State
-        public virtual List<Bullet> Shoot(BulletContext context)
+        public virtual List<Bullet> Shoot(ref Tank t)
         {
             return new List<Bullet>();
         }
@@ -122,7 +129,7 @@ namespace SharedObjects
     }
 
     /// <summary>
-        /// A 'ConcreteState' class
+        /// A 'ConcreteStateA' class
         /// </summary>
         public class SimpleBullet : Bullet
         {
@@ -132,54 +139,61 @@ namespace SharedObjects
                 bulletsToCreate = 1;
             }
 
-            public void ToogleState(BulletContext context)
-            {
-                context.state = new TripleBullet(x, y, width, height, speed, bulletId, side);
-            }
-
-            public override List<Bullet> Shoot(BulletContext context)
+            public override List<Bullet> Shoot(ref Tank t)
             {
                 List<Bullet> bullets = new List<Bullet>();
-
-                Bullet b = new Bullet(x, y, width,
-                    height, speed, bulletId, side);
-                bullets.Add(b);
-                
+                if (t.hasTripleShoot)
+                {
+                    this._context.ChangeState(new TripleBullet(x, y, width, height, speed, bulletId, side, t.tripleshootstartime));
+                    this.Shoot(ref t); // calls triple shoot bullet instead. There wont be recursion, because type changes
+                }
+                else
+                {
+                    Bullet b = new Bullet(x, y, width,
+                        height, speed, bulletId++, side);
+                    bullets.Add(b);
+                }
                 return bullets;
             }
         }
 
         /// <summary>
-        /// A 'ConcreteState' class
+        /// A 'ConcreteStateB' class
         /// </summary>
         public class TripleBullet : Bullet
         {
-            public TripleBullet(int x, int y, int width, int height, int speed, int bulletId, FacingSide side)
-                : base(x, y, width, height, speed, bulletId, side)
-            {
-                bulletsToCreate = 3;
+            public DateTime tripleshootstartime { get; set; }
+            public TripleBullet(int x, int y, int width, int height, int speed, int bulletId, FacingSide side, DateTime startTime)
+                    : base(x, y, width, height, speed, bulletId, side)
+                {
+                    bulletsToCreate = 3;
+                    this.tripleshootstartime = startTime;
             }
 
-            public void ToogleState(BulletContext context)
-            {
-                context.state = new SimpleBullet(x, y, width, height, speed, bulletId, side);
-            }
-
-            public override List<Bullet> Shoot(BulletContext context)
+            public override List<Bullet> Shoot(ref Tank t)
             {
                 List<Bullet> bullets = new List<Bullet>();
-                int x_current = this.x;
-                int y_current = this.y;
-                for (int i = 0; i < bulletsToCreate; i++)
+                // context change
+                // if 10 seconds from triple shoot powerup has passed, state changes to SimpleBullet state
+                if ((DateTime.Now - tripleshootstartime).Seconds > 10)
                 {
-                    GetOffsetBulletCoordinates(side, ref x_current, ref y_current, i * 12);
-                    Bullet b = new Bullet(x_current, y_current, width,
-                        height, speed, bulletId++, side);
-                    bullets.Add(b);
+                    this._context.ChangeState(new SimpleBullet(x, y, width, height, speed, bulletId, side));
+                    t.hasTripleShoot = false;
+                    this.Shoot(ref t); // calls simple shoot bullet instead. There wont be recursion, because type changes
                 }
-                
-                // if (now - tripleshootstartime > 5s ) toogle. 
-                //ToogleState(context); // change back to simple shoot after some time
+                else
+                {
+                    int x_current = this.x;
+                    int y_current = this.y;
+                    for (int i = 0; i < bulletsToCreate; i++)
+                    {
+                        GetOffsetBulletCoordinates(side, ref x_current, ref y_current, i * 12);
+                        Bullet b = new Bullet(x_current, y_current, width,
+                            height, speed, bulletId++, side);
+                        bullets.Add(b);
+                    }
+                }
+
                 return bullets;
             }
 
@@ -211,18 +225,25 @@ namespace SharedObjects
         /// </summary>
         public class BulletContext
         {
-            public Bullet state { get; set; }
+            private Bullet _state = null;
 
             // Constructor
             public BulletContext(Bullet state)
             {
-                this.state = state;
+                this.ChangeState(state);
             }
 
-            public List<Bullet> RequestShoot()
+            public List<Bullet> RequestShoot(ref Tank t)
             {
-                return state.Shoot(this); // handle method for state
+                return _state.Shoot(ref t); // handle method for state
+            }
+
+            public void ChangeState(Bullet st)
+            {
+                this._state = st;
+                this._state.SetContext(this);
             }
         }
     }
+
 

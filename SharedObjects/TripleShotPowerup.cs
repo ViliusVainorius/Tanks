@@ -18,6 +18,7 @@ namespace SharedObjects
         public override void PickUp(ref Tank tank)
         {
             tank.hasTripleShoot = true;
+            tank.tripleshootstartime = DateTime.Now;
         }
 
         public override Rectangle GetNewRectangle()

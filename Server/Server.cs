@@ -48,7 +48,8 @@ namespace Server
             BulletContext context;
             if (triple)
             {
-                TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side); 
+                TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side,
+                    t.tripleshootstartime); 
                 context = new BulletContext(tripleBullet);
                 _bulletId += tripleBullet.bulletsToCreate;
             }
@@ -59,7 +60,7 @@ namespace Server
                 _bulletId += simpleBullet.bulletsToCreate;
             }
 
-            newbulletList = context.RequestShoot();
+            newbulletList = context.RequestShoot(ref t);
 
             foreach (Bullet b in newbulletList)
             {

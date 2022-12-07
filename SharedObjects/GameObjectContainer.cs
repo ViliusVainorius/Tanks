@@ -30,6 +30,7 @@ namespace SharedObjects
                 Tanks[i].lives = gameObjectContainer.Tanks[i].lives;
                 Tanks[i].speed = gameObjectContainer.Tanks[i].speed;
                 Tanks[i].hasTripleShoot = gameObjectContainer.Tanks[i].hasTripleShoot;
+                Tanks[i].tripleshootstartime = gameObjectContainer.Tanks[i].tripleshootstartime;
             }
 
             for(int i = 0; i < Powerups.Count(); i++)
@@ -226,6 +227,7 @@ namespace SharedObjects
                 writer.WriteAttributeString("speed", tank.speed.ToString());
                 writer.WriteAttributeString("Rotation", tank.Rotation.ToString());
                 writer.WriteAttributeString("lives", tank.lives.ToString());
+                writer.WriteAttributeString("tripleshootstartime", tank.tripleshootstartime.ToString());
                 int side = (int)tank.side;
                 writer.WriteAttributeString("side", side.ToString());
                 writer.WriteEndElement();
