@@ -18,7 +18,7 @@ namespace SharedObjects
 
         public override void PickUp(ref Tank tank)
         {
-            tank.lives = tank.lives + 1;// tank.lives + 1 >= 3 ? 3 : tank.lives + 1;
+            tank.lives = tank.lives + 1;
         }
 
         public override Rectangle GetNewRectangle()

@@ -40,86 +40,91 @@ namespace Tanks
 
         bool _moveLeft, _moveRight, _moveUp, _moveDown, _gameOver, _shoot;
 
+        bool endGame = false;
+
         public MainWindow()
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            _socket.Blocking = false;
-            _socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
-
-            Packet packet = new Packet(new byte[0]);
-            packet.SendData(_socket);
-            _previous = DateTime.Now;
-
-            InitializeComponent();
-
-            MyCanvas.Focus();
-
-            while(true)
+            if (!endGame)
             {
-                packet = Packet.ReceiveData(_socket);
-                if (packet == null)
-                {
-                    Thread.Sleep(100);
-                    SendKeepAlive();
-                    continue;
-                }
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                _socket.Blocking = false;
+                _socket.Connect(new IPEndPoint(IPAddress.Loopback, 8888));
 
-                XmlSerializer ser = new XmlSerializer(typeof(StartGamePacket));
-                using (Stream stream = new MemoryStream(packet.Data))
+                Packet packet = new Packet(new byte[0]);
+                packet.SendData(_socket);
+                _previous = DateTime.Now;
+
+                InitializeComponent();
+
+                MyCanvas.Focus();
+
+                while (true)
                 {
-                    using (XmlReader reader = XmlReader.Create(stream))
+                    packet = Packet.ReceiveData(_socket);
+                    if (packet == null)
                     {
-                        StartGamePacket startGamePacket = (StartGamePacket)ser.Deserialize(reader);
-                        GameSession.xmlFileName = startGamePacket.fileName;
-                        GameSession.Instance.self = startGamePacket.self;
+                        Thread.Sleep(100);
+                        SendKeepAlive();
+                        continue;
                     }
+
+                    XmlSerializer ser = new XmlSerializer(typeof(StartGamePacket));
+                    using (Stream stream = new MemoryStream(packet.Data))
+                    {
+                        using (XmlReader reader = XmlReader.Create(stream))
+                        {
+                            StartGamePacket startGamePacket = (StartGamePacket)ser.Deserialize(reader);
+                            GameSession.xmlFileName = startGamePacket.fileName;
+                            GameSession.Instance.self = startGamePacket.self;
+                        }
+                    }
+
+                    break;
                 }
 
-                break;
+                //GameSession.Instance.GameObjectContainer.Tanks.Append(heavyTank);
+                Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
+
+                ImageBrush[] playerImages = new ImageBrush[tanks.Length];
+                for (int i = 0; i < playerImages.Length; i++)
+                {
+                    playerImages[i] = new ImageBrush();
+                }
+
+                playerImages[0].ImageSource = new BitmapImage(new Uri(tanks[0].Skin));
+                playerImages[1].ImageSource = new BitmapImage(new Uri(tanks[1].Skin));
+
+                for (int i = 0; i < tanks.Length; i++)
+                {
+                    tanks[i].CanvasId = MyCanvas.Children.Add(tanks[i].Rectangle);
+                    Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
+                    Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
+                    tanks[i].Rectangle.Fill = playerImages[i];
+                }
+
+                Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
+                foreach (var w in walls)
+                {
+                    Rectangle wall = w.Rectangle;
+                    w.CanvasId = MyCanvas.Children.Add(wall);
+                    Canvas.SetLeft(wall, w.X);
+                    Canvas.SetTop(wall, w.Y);
+                }
+
+                Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
+                for (int i = 0; i < powerups.Length; i++)
+                {
+                    Rectangle powerup = powerups[i].Rectangle;
+                    walls[i].CanvasId = MyCanvas.Children.Add(powerup);
+                    Canvas.SetLeft(powerup, powerups[i].X);
+                    Canvas.SetTop(powerup, powerups[i].Y);
+                }
+                
+                _gameTimer.Tick += GameLoop;
+                _gameTimer.Interval = TimeSpan.FromMilliseconds(5);
+
+                StartGame();
             }
-
-            //GameSession.Instance.GameObjectContainer.Tanks.Append(heavyTank);
-            Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
-
-            ImageBrush[] playerImages = new ImageBrush[tanks.Length];
-            for(int i = 0; i < playerImages.Length; i++)
-            {
-                playerImages[i] = new ImageBrush();
-            }
-
-            playerImages[0].ImageSource = new BitmapImage(new Uri(tanks[0].Skin));
-            playerImages[1].ImageSource = new BitmapImage(new Uri(tanks[1].Skin));
-
-            for (int i = 0; i < tanks.Length; i++)
-            {
-                tanks[i].CanvasId = MyCanvas.Children.Add(tanks[i].Rectangle);
-                Canvas.SetTop(tanks[i].Rectangle, tanks[i].Y);
-                Canvas.SetLeft(tanks[i].Rectangle, tanks[i].X);
-                tanks[i].Rectangle.Fill = playerImages[i];
-            }
-
-            Wall[] walls = GameSession.Instance.GameObjectContainer.Walls;
-            foreach (var w in walls)
-            {
-                Rectangle wall = w.Rectangle;
-                w.CanvasId = MyCanvas.Children.Add(wall);
-                Canvas.SetLeft(wall, w.X);
-                Canvas.SetTop(wall, w.Y);
-            }
-
-            Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
-            for (int i = 0; i < powerups.Length; i++)
-            {
-                Rectangle powerup = powerups[i].Rectangle;
-                walls[i].CanvasId = MyCanvas.Children.Add(powerup);
-                Canvas.SetLeft(powerup, powerups[i].X);
-                Canvas.SetTop(powerup, powerups[i].Y);
-            }
-
-            _gameTimer.Tick += GameLoop;
-            _gameTimer.Interval = TimeSpan.FromMilliseconds(5);
-
-            StartGame();
         }
 
         private void GameLoop(object sender, EventArgs e)
@@ -181,6 +186,18 @@ namespace Tanks
             
             LivesText.Content = "Gyvybės: " + tank.lives;
 
+            // check game end
+            if (tank.lives <= 0)
+            {
+                endGame = true;
+                string color = "blue";
+                if ((tank is BlueHeavyTank) || (tank is BlueLightTank))
+                    color = "red";
+
+                MessageBox.Show("Game over " + color + " team won!");
+                return;
+            }
+
             _playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             _playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             ActionController controller = new ActionController();
@@ -222,7 +239,10 @@ namespace Tanks
                 _socket.Send(data);
             }
 
-            SendKeepAlive();
+            if (!endGame)
+            {
+                SendKeepAlive();
+            }
         }
 
         private void SendKeepAlive()
