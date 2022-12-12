@@ -168,6 +168,9 @@ namespace SharedObjects
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
                         myTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
                         myTank.lives = int.Parse(reader.GetAttribute("lives"));
+                        //--------------------- Memento pattern
+                        myTank.State = "Healthy"; // states - "Healthy" "Shot" "Broken"
+                        //---------------------
                         tanks.Add(myTank);
                         break;
                     case "Bullet":

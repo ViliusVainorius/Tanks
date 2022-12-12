@@ -119,9 +119,10 @@ namespace Tanks
                     Canvas.SetLeft(powerup, powerups[i].X);
                     Canvas.SetTop(powerup, powerups[i].Y);
                 }
-                
+
                 _gameTimer.Tick += GameLoop;
                 _gameTimer.Interval = TimeSpan.FromMilliseconds(5);
+
 
                 StartGame();
             }
@@ -183,8 +184,18 @@ namespace Tanks
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
-            
-            LivesText.Content = "Gyvybės: " + tank.lives;
+            Originator originator = new Originator("Healthy");
+            Caretaker caretaker = new Caretaker(originator);
+            caretaker.Backup();
+            if (tank.lives == 1)
+            {
+                originator.SetState("Shot");
+            }else if(tank.lives == 0)
+            {
+                originator.SetState("Broken");
+            }
+
+                LivesText.Content = "Gyvybės: " + tank.lives;
 
             // check game end
             if (tank.lives <= 0)
@@ -201,6 +212,8 @@ namespace Tanks
             _playerHitBox = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             _playerHitBoxObject = new Rect(Canvas.GetLeft(player), Canvas.GetTop(player), player.Width, player.Height);
             ActionController controller = new ActionController();
+
+
 
             if (_moveLeft)
             {

@@ -22,6 +22,7 @@ namespace SharedObjects
         public int Rotation;
         public FacingSide side;
         public DateTime tripleshootstartime { get; set; }
+        public string State { get; set; }
 
         public Tank(int x, int y, int width, int height, int speed, string skin) : base(x, y, width, height) {
 
