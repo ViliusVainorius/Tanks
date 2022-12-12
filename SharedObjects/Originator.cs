@@ -15,9 +15,15 @@ namespace SharedObjects
             _state = state;
         }
 
-        public void SetState(string tankState)
+        public Tank SetState(string tankState, Tank tank)
         {
             this._state = tankState;
+            if(_state == "Shot")
+            {
+                tank.speed = 1;
+
+            }
+            return tank;
         }
 
         public IMemento Save()

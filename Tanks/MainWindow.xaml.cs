@@ -187,13 +187,16 @@ namespace Tanks
             Originator originator = new Originator("Healthy");
             Caretaker caretaker = new Caretaker(originator);
             caretaker.Backup();
-            if (tank.lives == 1)
+            if (tank.lives == 2)
             {
-                originator.SetState("Shot");
-            }else if(tank.lives == 0)
+               tank = originator.SetState("Shot",tank);
+                
+            }else if(tank.lives == 1)
             {
-                originator.SetState("Broken");
+                originator.SetState("Broken", tank);
             }
+
+            //caretaker.Undo();
 
                 LivesText.Content = "Gyvybės: " + tank.lives;
 
