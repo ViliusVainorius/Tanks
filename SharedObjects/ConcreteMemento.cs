@@ -9,10 +9,12 @@ namespace SharedObjects
     class ConcreteMemento : IMemento
     {
         private string _state;
+        private Tank _tank;
 
-        public ConcreteMemento(string state)
+        public ConcreteMemento(string state, Tank tank)
         {
             _state = state;
+            _tank = tank;
         }
 
         public string GetState()

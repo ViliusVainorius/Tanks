@@ -19,6 +19,8 @@ namespace Server
         private DateTime _previous;
         private int _bulletId = 0; //Unique bullet id
         private bool gameStarted = false;
+        private bool stateCheckP1 = false;
+        private bool stateCheckP2 = false;
 
         public Server() : this(8888) { }
 
@@ -123,6 +125,36 @@ namespace Server
                         if(tanks[i].player.EndPoint == player.EndPoint)
                         {
                             ActionController controller = new ActionController();
+//----------------------------Memento---------------------------------------------------
+                            Originator originator = new Originator("Healthy", tanks[i]);
+                            Caretaker caretaker = new Caretaker(originator);
+                            caretaker.Backup();
+                            if (tanks[i].lives == 2)
+                            {
+                                if (i == 0 && stateCheckP1 == false)
+                                {
+                                    GameSession.Instance.GameObjectContainer.Tanks[i] = originator.SetState("Shot", tanks[i], i);
+                                    stateCheckP1 = true;
+                                }
+                                else if (i == 1 && stateCheckP2 == false)
+                                {
+                                    GameSession.Instance.GameObjectContainer.Tanks[i] = originator.SetState("Shot", tanks[i], i);
+                                    stateCheckP2 = true;
+                                }
+                            }
+                            else if (tanks[i].lives >= 3)
+                            {
+                                GameSession.Instance.GameObjectContainer.Tanks[i] = originator.SetState("Healthy", tanks[i], i);
+                            }
+                            else if (tanks[i].lives == 1)
+                            {
+                                GameSession.Instance.GameObjectContainer.Tanks[i] = originator.SetState("Broken", tanks[i], i);
+                            }
+                            else
+                            {
+                                caretaker.Undo();
+                            }
+//-----------------------------------------------------------------------------
 
                             if (action.side == FacingSide.Right)
                             {

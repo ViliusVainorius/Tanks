@@ -82,7 +82,6 @@ namespace Tanks
                     break;
                 }
 
-                //GameSession.Instance.GameObjectContainer.Tanks.Append(heavyTank);
                 Tank[] tanks = GameSession.Instance.GameObjectContainer.Tanks;
 
                 ImageBrush[] playerImages = new ImageBrush[tanks.Length];
@@ -184,21 +183,7 @@ namespace Tanks
             Tank tank = GameSession.Instance.GameObjectContainer.Tanks[GameSession.Instance.self];
             Rectangle player = tank.Rectangle;
 
-            Originator originator = new Originator("Healthy");
-            Caretaker caretaker = new Caretaker(originator);
-            caretaker.Backup();
-            if (tank.lives == 2)
-            {
-               tank = originator.SetState("Shot",tank);
-                
-            }else if(tank.lives == 1)
-            {
-                originator.SetState("Broken", tank);
-            }
-
-            //caretaker.Undo();
-
-                LivesText.Content = "Gyvybės: " + tank.lives;
+            LivesText.Content = "Gyvybės: " + tank.lives;
 
             // check game end
             if (tank.lives <= 0)

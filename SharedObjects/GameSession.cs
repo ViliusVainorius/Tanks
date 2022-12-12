@@ -25,6 +25,8 @@ namespace SharedObjects
         public bool gameStarted = false;
         
         private static GameSession _instance;
+        //public Originator originator = new Originator("Healthy", GameSession.Instance.GameObjectContainer.Tanks[0]);
+        //public Caretaker caretaker = new Caretaker(GameSession.Instance.originator);
 
         public static GameSession Instance => _instance ?? (_instance = DeserializeGameSession());
 

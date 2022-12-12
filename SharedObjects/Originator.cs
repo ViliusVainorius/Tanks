@@ -9,26 +9,55 @@ namespace SharedObjects
     public class Originator
     {
         private string _state;
+        private Tank _tank;
 
-        public Originator(string state)
+        public Originator(string state, Tank tank)
         {
             _state = state;
+            _tank = tank;
         }
 
-        public Tank SetState(string tankState, Tank tank)
+        public Tank SetState(string tankState, Tank tank, int i)
         {
             this._state = tankState;
+            this._tank = tank;
             if(_state == "Shot")
             {
-                tank.speed = 1;
-
+                if(i == 0)
+                {
+                    this._tank.X = 135;
+                    this._tank.Y = 267;
+                    this._tank.speed = 1;
+                }
+                else if(i == 1)
+                {
+                    this._tank.X = 635;
+                    this._tank.Y = 167;
+                    this._tank.speed = 1;
+                }
+                
             }
-            return tank;
+            else if (_state == "Broken")
+            {
+                this._tank.speed = 0;
+            }
+            else if (_state == "Healthy")
+            {
+                if (i == 0)
+                    _tank.speed = 3;
+                if (i == 1)
+                    _tank.speed = 5;
+            }
+            else
+            {
+                this._tank = tank;
+            }
+            return this._tank;
         }
 
         public IMemento Save()
         {
-            return new ConcreteMemento(this._state);
+            return new ConcreteMemento(this._state,this._tank);
         }
 
         public void Restore(IMemento memento)
