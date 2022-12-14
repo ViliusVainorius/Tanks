@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.JScript" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -75,6 +76,7 @@
     <Compile Include="BlueLightTank.cs" />
     <Compile Include="BlueTeam.cs" />
     <Compile Include="Bullet.cs" />
+    <Compile Include="BulletElement.cs" />
     <Compile Include="Caretaker.cs" />
     <Compile Include="CommandMove.cs" />
     <Compile Include="CommandMoveDown.cs" />
@@ -101,14 +103,18 @@
     <Compile Include="RedHeavyTank.cs" />
     <Compile Include="RedLightTank.cs" />
     <Compile Include="RedTeam.cs" />
+    <Compile Include="SingleBulletElement.cs" />
+    <Compile Include="FireBulletVisitor.cs" />
     <Compile Include="SpeedPowerup.cs" />
     <Compile Include="StartGamePacket.cs" />
     <Compile Include="Tank.cs" />
     <Compile Include="TankCreator.cs" />
     <Compile Include="Team.cs" />
+    <Compile Include="TripleBulletElement.cs" />
     <Compile Include="TripleShotPowerup.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="UsedPowerup.cs" />
+    <Compile Include="Visitor.cs" />
     <Compile Include="Wall.cs" />
   </ItemGroup>
   <ItemGroup>

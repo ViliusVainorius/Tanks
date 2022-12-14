@@ -46,6 +46,9 @@ namespace Server
 
             GetBulletCoordinates(t, ref x, ref y, width, height);
 
+            //--------------------- visitor-------------
+            Visitor visitor = new FireBulletVisitor();
+
             List<Bullet> newbulletList;
             BulletContext context;
             if (triple)
@@ -53,11 +56,17 @@ namespace Server
                 TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side,
                     t.tripleshootstartime); 
                 context = new BulletContext(tripleBullet);
+
+                BulletElement method1 = new TripleBulletElement();// triple bullet element to visit
+                method1.addBulletFire(visitor);
             }
             else
             {
                 SimpleBullet simpleBullet = new SimpleBullet(x, y, width, height, t.speed, _bulletId, t.side);
                 context = new BulletContext(simpleBullet);
+
+                BulletElement method1 = new SingleBulletElement();// single bullet element to visit
+                method1.addBulletFire(visitor);
             }
 
             _bulletId += context.GetBulletsCount();
