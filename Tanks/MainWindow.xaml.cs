@@ -37,6 +37,9 @@ namespace Tanks
         Rect _playerHitBoxObject;
 
         DateTime _previous;
+        DateTime _bulletShot;
+
+        int bulletShotId;
 
         bool _moveLeft, _moveRight, _moveUp, _moveDown, _gameOver, _shoot;
 
@@ -129,6 +132,21 @@ namespace Tanks
 
         private void GameLoop(object sender, EventArgs e)
         {
+            if ((DateTime.Now - _bulletShot).Seconds > 0.5)
+            {
+                if (MyCanvas.Children[bulletShotId] is Rectangle)
+                {
+                    try
+                    {
+                        MyCanvas.Children[bulletShotId].Visibility = Visibility.Collapsed;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+            }
             PlayerAction action = null;
 
             Packet packet = Packet.ReceiveDataFrom(_socket, new IPEndPoint(IPAddress.Loopback, 8888));
@@ -227,6 +245,38 @@ namespace Tanks
             {
                 Thread.Sleep(100);
                 action = new PlayerAction(ActionType.Shoot, tank.side);
+                
+                //---------- Visitor pattern-------------------
+                Visitor visitor = new FireBulletVisitor(tank);
+                Tank t;
+                Rectangle rec;
+                if (!tank.hasTripleShoot)
+                {
+                    BulletElement method1 = new SingleBulletElement();// single bullet element to visit
+                    t = method1.addBulletFire(visitor);
+                    rec = t.GetRectangle();
+                    _bulletShot = DateTime.Now;
+                }
+                else
+                {
+                    BulletElement method1 = new TripleBulletElement();// triple bullet element to visit
+                    t = method1.addBulletFire(visitor);
+                    rec = t.GetRectangle();
+                    _bulletShot = DateTime.Now;
+                }
+
+                ImageBrush bulletFireEffect = new ImageBrush();
+                try
+                {
+
+                    MyCanvas.Children.Add(rec);
+                    bulletShotId = MyCanvas.Children.Count-1;
+                    Canvas.SetTop(rec, t.Y);
+                    Canvas.SetLeft(rec, t.X);
+                    bulletFireEffect.ImageSource = new BitmapImage(new Uri(t.Skin));
+                    rec.Fill = bulletFireEffect;
+                }
+                catch { }
             }
 
             controller.Execute();

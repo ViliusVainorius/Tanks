@@ -8,6 +8,6 @@ namespace SharedObjects
 {
     public interface BulletElement
     {
-        double addBulletFire(Visitor bulletFire);
+        Tank addBulletFire(Visitor bulletFire);
     }
 }

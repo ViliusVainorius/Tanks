@@ -163,8 +163,6 @@ namespace SharedObjects
 
                         //playerImages[1].ImageSource = new BitmapImage(new Uri("pack://application:,,,/images/tankRed.png"));
 
-
-
                         //Tank tank = new Tank(int.Parse(reader.GetAttribute("X")), int.Parse(reader.GetAttribute("Y")), int.Parse(reader.GetAttribute("Width")), int.Parse(reader.GetAttribute("Height")), int.Parse(reader.GetAttribute("Speed")));
                         myTank.Rotation = int.Parse(reader.GetAttribute("Rotation"));
                         myTank.lives = int.Parse(reader.GetAttribute("lives"));

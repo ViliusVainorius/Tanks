@@ -2,7 +2,7 @@
 {
     public interface Visitor
     {
-        double AddPng(SingleBulletElement png);
-        double AddPng(TripleBulletElement png);
+        Tank AddPng(SingleBulletElement png);
+        Tank AddPng(TripleBulletElement png);
     }
 }

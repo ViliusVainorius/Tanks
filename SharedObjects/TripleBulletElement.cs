@@ -8,7 +8,7 @@ namespace SharedObjects
 {
     public class TripleBulletElement : BulletElement
     {
-        public double addBulletFire(Visitor bulletFire)
+        public Tank addBulletFire(Visitor bulletFire)
         {
             return bulletFire.AddPng(this);
         }

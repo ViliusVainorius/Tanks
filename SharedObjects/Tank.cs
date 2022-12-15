@@ -47,6 +47,23 @@ namespace SharedObjects
             return rec;
         }
 
+        /// <summary>
+        /// Rectangle for tank bullet shooting png only!
+        /// </summary>
+        /// <param name="t1">bullet's shooting tank rectangle</param>
+        /// <returns>bullet's shooting rectangle</returns>
+        public Rectangle GetRectangle()
+        {
+            Rectangle rec = new Rectangle()
+            {
+                Width = this.Width,
+                Height = this.Height,
+                Fill = Brushes.Red,
+                Tag = "BulletPng",
+            };
+            return rec;
+        }
+
         public override void Draw()
         {
             throw new NotImplementedException();
