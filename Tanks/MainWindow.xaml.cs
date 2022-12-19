@@ -147,6 +147,8 @@ namespace Tanks
                 }
 
             }
+
+
             PlayerAction action = null;
 
             Packet packet = Packet.ReceiveDataFrom(_socket, new IPEndPoint(IPAddress.Loopback, 8888));
@@ -177,6 +179,7 @@ namespace Tanks
                                 MyCanvas.Children.Remove(powerup.Rectangle);
                             }
                         }
+
                         foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.Bullets)
                         {
                             try
@@ -187,7 +190,6 @@ namespace Tanks
 
                             Canvas.SetLeft(bullet.Rectangle, bullet.X);
                             Canvas.SetTop(bullet.Rectangle, bullet.Y);
-                            
                         }
 
                         foreach (Bullet bullet in GameSession.Instance.GameObjectContainer.remove)
@@ -252,14 +254,14 @@ namespace Tanks
                 Rectangle rec;
                 if (!tank.hasTripleShoot)
                 {
-                    BulletElement method1 = new SingleBulletElement();// single bullet element to visit
+                    BulletElement method1 = new SingleBulletElement(); // single bullet element to visit
                     t = method1.addBulletFire(visitor);
                     rec = t.GetRectangle();
                     _bulletShot = DateTime.Now;
                 }
                 else
                 {
-                    BulletElement method1 = new TripleBulletElement();// triple bullet element to visit
+                    BulletElement method1 = new TripleBulletElement(); // triple bullet element to visit
                     t = method1.addBulletFire(visitor);
                     rec = t.GetRectangle();
                     _bulletShot = DateTime.Now;
@@ -268,9 +270,7 @@ namespace Tanks
                 ImageBrush bulletFireEffect = new ImageBrush();
                 try
                 {
-
-                    MyCanvas.Children.Add(rec);
-                    bulletShotId = MyCanvas.Children.Count-1;
+                    bulletShotId = MyCanvas.Children.Add(rec);
                     Canvas.SetTop(rec, t.Y);
                     Canvas.SetLeft(rec, t.X);
                     bulletFireEffect.ImageSource = new BitmapImage(new Uri(t.Skin));

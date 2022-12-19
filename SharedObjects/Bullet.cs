@@ -73,7 +73,7 @@ namespace SharedObjects
             return new List<Bullet>();
         }
 
-        public void Move(ref int _bulletId)
+        public void Move()
         {
             switch (side)
             {
@@ -104,7 +104,6 @@ namespace SharedObjects
                     {
                         tanks[i].lives--;
                         bullets.Remove(this);
-                        _bulletId--;
                         GameSession.Instance.GameObjectContainer.Bullets = bullets.ToArray();
                         return;
                     }
@@ -121,7 +120,6 @@ namespace SharedObjects
                     if (gameObject == walls[i])
                     {
                         bullets.Remove(this);
-                        _bulletId--;
                         GameSession.Instance.GameObjectContainer.Bullets = bullets.ToArray();
                         return;
                     }

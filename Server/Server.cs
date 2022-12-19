@@ -17,7 +17,6 @@ namespace Server
         private Socket _socket;
         private List<Player> _players = new List<Player>();
         private DateTime _previous;
-        private int _bulletId = 0; //Unique bullet id
         private bool gameStarted = false;
         private bool stateCheckP1 = false;
         private bool stateCheckP2 = false;
@@ -34,72 +33,15 @@ namespace Server
             _previous = DateTime.Now;
         }
 
-        public void CreateBullet(Tank t)
-        {
-            List<Bullet> bulletList = GameSession.Instance.GameObjectContainer.Bullets.ToList();
-            int x = t.X;
-            int y = t.Y;
-            bool triple = t.hasTripleShoot;
-
-            int width = t.Width / 3;
-            int height = t.Height / 3;
-
-            GetBulletCoordinates(t, ref x, ref y, width, height);
-
-            List<Bullet> newbulletList;
-            BulletContext context;
-            if (triple)
-            {
-                TripleBullet tripleBullet = new TripleBullet(x, y, width, height, t.speed, _bulletId, t.side,
-                    t.tripleshootstartime); 
-                context = new BulletContext(tripleBullet);
-            }
-            else
-            {
-                SimpleBullet simpleBullet = new SimpleBullet(x, y, width, height, t.speed, _bulletId, t.side);
-                context = new BulletContext(simpleBullet);
-            }
-
-            _bulletId += context.GetBulletsCount();
-            newbulletList = context.RequestShoot(ref t);
-
-            foreach (Bullet b in newbulletList)
-            {
-                bulletList.Add(b);
-            }
-
-            GameSession.Instance.GameObjectContainer.Bullets = bulletList.ToArray();
-        }
-        
-        // offset - distance between two bullets, if triple shot
-        public void GetBulletCoordinates(Tank t, ref int x, ref int y, int width, int height)
-        {
-            if (t.side == FacingSide.Left)
-            {
-                x -= (t.Width) - width;
-                y += (t.Height / 2) - height / 2;
-            }
-            else if (t.side == FacingSide.Right)
-            {
-                x += (t.Width) + width;
-                y += (t.Height / 2) - height / 2;
-            }
-            else if (t.side == FacingSide.Down)
-            {
-                y += (t.Height) + 1;
-                x += t.Width / 2 - width / 2;
-            }
-            else if (t.side == FacingSide.Up)
-            {
-                y -= (height);
-                x += t.Width / 2 - width / 2;
-            }
-        }
-
         public void Start()
         {
             Console.WriteLine("Server has been started!");
-            Timer timer = new Timer(UpdateGame, "", TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(50));
+            Timer timer = new Timer(UpdateGame, "", TimeSpan.FromMilliseconds(30), TimeSpan.FromMilliseconds(30));
+
+            Handler moveHandler = new MoveHandler();
+            Handler shotHandler = new ShotHandler();
+
+            moveHandler.SetSuccessor(shotHandler);
 
             while (true)
             {
@@ -154,58 +96,9 @@ namespace Server
                             {
                                 caretaker.Undo();
                             }
-//-----------------------------------------------------------------------------
+                            //-----------------------------------------------------------------------------
 
-                            if (action.side == FacingSide.Right)
-                            {
-                                if (action.type == ActionType.Move)
-                                {
-                                    controller.SetCommand(new CommandMoveRight(tanks[i]));
-                                    tanks[i].Rotation = 90;
-                                }
-                                else if(action.type == ActionType.Shoot)
-                                {
-                                    CreateBullet(tanks[i]);
-                                }
-                            }
-                            else if (action.side == FacingSide.Left)
-                            {
-                                if (action.type == ActionType.Move)
-                                {
-                                    controller.SetCommand(new CommandMoveLeft(tanks[i]));
-                                    tanks[i].Rotation = -90;
-                                }
-                                else if (action.type == ActionType.Shoot)
-                                {
-                                    CreateBullet(tanks[i]);
-                                }
-                            }
-                            else if (action.side == FacingSide.Up)
-                            {
-                                if (action.type == ActionType.Move)
-                                {
-                                    controller.SetCommand(new CommandMoveUp(tanks[i]));
-                                    tanks[i].Rotation = 0;
-                                }
-                                else if (action.type == ActionType.Shoot)
-                                {
-                                    CreateBullet(tanks[i]);
-                                }
-                            }
-                            else if (action.side == FacingSide.Down)
-                            {
-                                if (action.type == ActionType.Move)
-                                {
-                                    controller.SetCommand(new CommandMoveDown(tanks[i]));
-                                    tanks[i].Rotation = -180;
-                                }
-                                else if (action.type == ActionType.Shoot)
-                                {
-                                    CreateBullet(tanks[i]);
-                                }
-                            }
-
-                            controller.Execute();
+                            moveHandler.HandleRequest(action, ref tanks[i]);
                         }
 
                         Powerup[] powerups = GameSession.Instance.GameObjectContainer.Powerups;
@@ -236,7 +129,7 @@ namespace Server
             {
                 if (bullet != null)
                 {
-                    bullet.Move(ref _bulletId);
+                    bullet.Move();
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.JScript;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,9 +55,12 @@ namespace SharedObjects
 
         public GameObject CheckCollision(GameObject[] gameObjects)
         {
-            foreach (GameObject gameObject in gameObjects)
+            Collection collection = new Collection(gameObjects);
+            Iterator iterator = collection.CreateIterator();
+
+            for(GameObject gameObject = iterator.First(); !iterator.IsDone; gameObject = iterator.Next())
             {
-                if (gameObject != null && this != gameObject && gameObject.Intersect(this))
+                if (this != gameObject && gameObject.Intersect(this))
                 {
                     return gameObject;
                 }

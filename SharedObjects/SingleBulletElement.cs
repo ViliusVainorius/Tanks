@@ -9,6 +9,7 @@ namespace SharedObjects
 {
     public class SingleBulletElement : BulletElement
     {
+        DateTime timeShot = DateTime.Now;
         public Tank addBulletFire(Visitor bulletFire)
         {
             return bulletFire.AddPng(this);

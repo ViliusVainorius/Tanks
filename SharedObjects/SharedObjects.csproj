@@ -78,6 +78,7 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="BulletElement.cs" />
     <Compile Include="Caretaker.cs" />
+    <Compile Include="Collection.cs" />
     <Compile Include="CommandMove.cs" />
     <Compile Include="CommandMoveDown.cs" />
     <Compile Include="CommandMoveUp.cs" />
@@ -88,11 +89,15 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectContainer.cs" />
     <Compile Include="GameSession.cs" />
+    <Compile Include="Handler.cs" />
     <Compile Include="HealthPowerup.cs" />
     <Compile Include="IMemento.cs" />
+    <Compile Include="Iterator.cs" />
+    <Compile Include="MoveHandler.cs" />
     <Compile Include="NoCommand.cs" />
     <Compile Include="Obstacle.cs" />
     <Compile Include="Originator.cs" />
+    <Compile Include="PickupHandler.cs" />
     <Compile Include="PlayerAction.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Player.cs" />
@@ -103,6 +108,7 @@
     <Compile Include="RedHeavyTank.cs" />
     <Compile Include="RedLightTank.cs" />
     <Compile Include="RedTeam.cs" />
+    <Compile Include="ShotHandler.cs" />
     <Compile Include="SingleBulletElement.cs" />
     <Compile Include="FireBulletVisitor.cs" />
     <Compile Include="SpeedPowerup.cs" />
